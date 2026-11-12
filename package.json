@@ -1,0 +1,59 @@
+{
+  "name": "degroshi",
+  "version": "1.0.0-beta.0",
+  "description": "The official TypeScript and JavaScript SDK for the Degroshi API",
+  "license": "Apache-2.0",
+  "author": "Degroshi",
+  "keywords": [
+    "degroshi",
+    "personal finance",
+    "budgeting",
+    "money",
+    "api",
+    "sdk",
+    "typescript"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "scripts": {
+    "generate": "openapi-ts",
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "bun test test/unit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/degroshi/degroshi-js.git"
+  },
+  "homepage": "https://github.com/degroshi/degroshi-js#readme",
+  "devDependencies": {
+    "@hey-api/openapi-ts": "0.99.0",
+    "@types/bun": "1.4.4",
+    "typescript": "5.9.3"
+  },
+  "bugs": {
+    "url": "https://github.com/degroshi/degroshi-js/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}
