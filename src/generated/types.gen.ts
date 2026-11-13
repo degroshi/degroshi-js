@@ -4253,11 +4253,15 @@ export type ListTransactionsData = {
          */
         category_id?: string;
         /**
-         * With category_id: also match its subcategories (the whole subtree)
+         * Categories (any of them, together with category_id): repeat the parameter or send comma separated ids
+         */
+        category_ids?: Array<string>;
+        /**
+         * With category_id or category_ids: also match their subcategories (each whole subtree)
          */
         include_subcategories?: boolean;
         /**
-         * Only transactions without a category (what the analytics report as uncategorized); ignored together with category_id
+         * Transactions without a category (what the analytics report as uncategorized). With category_ids: the rows in any of those categories or without one; a category_id alone takes precedence over it
          */
         uncategorized?: boolean;
         /**
@@ -4269,9 +4273,17 @@ export type ListTransactionsData = {
          */
         type?: string;
         /**
+         * Types (any of them, together with type): income, expense, transfer; repeat the parameter or send them comma separated
+         */
+        types?: Array<string>;
+        /**
          * Filter by status
          */
         status?: string;
+        /**
+         * Statuses (any of them, together with status): completed, pending, cancelled; repeat the parameter or send them comma separated
+         */
+        statuses?: Array<string>;
         /**
          * First local day (YYYY-MM-DD) in the user's zone
          */
@@ -4332,6 +4344,10 @@ export type ListTransactionsData = {
          * Business space: keep rows with this tax class (revenue, own_transfer_in, owner_draw…)
          */
         treatment_class?: string;
+        /**
+         * Business space: keep rows with any of these tax classes (together with treatment_class); repeat the parameter or send them comma separated
+         */
+        treatment_classes?: Array<string>;
         /**
          * Also list the transfers between the space's portfolio accounts (a wallet and an exchange) as read-only rows of kind portfolio_transfer, ordered, filtered and paged with the transactions; rows no pair can match (category, tag, counterparty, project, tax filters, another type) leave them out
          */
@@ -4451,11 +4467,15 @@ export type GetTransactionDayTotalsData = {
          */
         category_id?: string;
         /**
-         * With category_id: also match its subcategories (the whole subtree)
+         * Categories (any of them, together with category_id): repeat the parameter or send comma separated ids
+         */
+        category_ids?: Array<string>;
+        /**
+         * With category_id or category_ids: also match their subcategories (each whole subtree)
          */
         include_subcategories?: boolean;
         /**
-         * Only transactions without a category; ignored together with category_id
+         * Transactions without a category. With category_ids: the rows in any of those categories or without one; a category_id alone takes precedence over it
          */
         uncategorized?: boolean;
         /**
@@ -4467,9 +4487,17 @@ export type GetTransactionDayTotalsData = {
          */
         type?: string;
         /**
+         * Types (any of them, together with type): income, expense, transfer; repeat the parameter or send them comma separated
+         */
+        types?: Array<string>;
+        /**
          * Filter by status
          */
         status?: string;
+        /**
+         * Statuses (any of them, together with status): completed, pending, cancelled; repeat the parameter or send them comma separated
+         */
+        statuses?: Array<string>;
         /**
          * First local day (YYYY-MM-DD) in the user's zone
          */

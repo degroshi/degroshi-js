@@ -15,6 +15,8 @@ browsers and edge runtimes.
 npm i degroshi
 ```
 
+The package is an ES module. Use `import`; on Node 20.19+ and 22.12+, `require("degroshi")` works too.
+
 ## Authenticate
 
 Create a personal access token in Degroshi under "Settings" › "For developers", and keep it on a server: anyone who
