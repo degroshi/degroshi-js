@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test"
 import { ApiConnectionError } from "../../src/errors"
-import { isRetrySafe, retryDelayMs, retryingFetch } from "../../src/retry"
+import { isRetrySafe, RETRIED_DELETE_HEADER, retryDelayMs, retryingFetch } from "../../src/retry"
 
 const noSleep = async () => {}
 
@@ -83,6 +83,37 @@ describe("retryingFetch", () => {
     await wrapped(new Request("https://api.test/v1/accounts"))
 
     // Assert
+    expect(seen).toHaveLength(1)
+  })
+
+  it.each([
+    ["a 503", new Response("", { status: 503 })],
+    ["a dropped connection", new TypeError("fetch failed")],
+  ])("answers 204 for a DELETE retried after %s that finds nothing", async (_, inputFirst) => {
+    // Arrange
+    const { fake, seen } = sequence(inputFirst, new Response('{"success":false}', { status: 404 }))
+    const wrapped = retryingFetch(fake, { maxRetries: 2, timeoutMs: 1000, sleep: noSleep })
+
+    // Act
+    const actual = await wrapped(new Request("https://api.test/v1/transactions/t1", { method: "DELETE" }))
+
+    // Assert
+    expect(actual.status).toBe(204)
+    expect(actual.headers.get(RETRIED_DELETE_HEADER)).toBe("true")
+    expect(await actual.text()).toBe("")
+    expect(seen).toHaveLength(2)
+  })
+
+  it("keeps the 404 of a DELETE that finds nothing on its first try", async () => {
+    // Arrange
+    const { fake, seen } = sequence(new Response('{"success":false}', { status: 404 }))
+    const wrapped = retryingFetch(fake, { maxRetries: 2, timeoutMs: 1000, sleep: noSleep })
+
+    // Act
+    const actual = await wrapped(new Request("https://api.test/v1/transactions/t1", { method: "DELETE" }))
+
+    // Assert
+    expect(actual.status).toBe(404)
     expect(seen).toHaveLength(1)
   })
 })

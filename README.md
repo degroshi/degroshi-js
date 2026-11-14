@@ -46,6 +46,24 @@ for await (const transaction of degroshi.transactions.iterate({ from_date: "2026
 
 Lists that use cursors (`sources.iteratePushed`, `events.iterate`) follow `next_cursor` the same way.
 
+## Keeping a copy
+
+`changes.iterate()` reads the change feed (`GET /v1/changes`): everything that changed since your cursor, deletions
+included, in the order the changes were saved. Without a cursor it starts with every object. Save `feed.cursor` after
+the loop and pass it next time:
+
+```ts
+const feed = degroshi.changes.iterate({ cursor: saved, types: ["transaction"] })
+for await (const change of feed) {
+  if (change.op === "delete") copy.delete(change.id)
+  else copy.set(change.id, change.data)
+}
+save(feed.cursor)
+```
+
+A cursor that can't continue (the space's access changed, 180 days passed) throws a `DegroshiError` with status 410
+and code `CHANGES_RESYNC_REQUIRED`: read again without a cursor and replace the copy.
+
 ## Money
 
 Amounts are strings, exactly as the API sends them (`"642.30"`), so no precision is lost. Don't turn them into
@@ -89,7 +107,8 @@ try {
 
 Requests that are safe to repeat are retried on network failures, 408, 429, 500, 502, 503 and 504, with backoff and
 respecting `Retry-After`. `maxRetries` sets how many times (default 2), and `timeoutMs` how long one try may take (default
-60 000).
+60 000). A delete retried after a lost answer that then finds nothing has been done by the earlier try, so it resolves
+instead of throwing `NotFoundError` (the stand-in answer is a 204 with the `RETRIED_DELETE_HEADER` header).
 
 ## Webhooks
 
@@ -114,6 +133,7 @@ you can catch up after downtime.
 - [Developer guide](https://docs.degroshi.com/en/developers): tokens, spaces, limits and errors.
 - [API reference](https://docs.degroshi.com/en/developers/api/me/list-my-spaces): every endpoint and its fields.
 - [Webhooks](https://docs.degroshi.com/en/developers/webhooks): events, signatures and retries.
+- [Keeping a copy](https://docs.degroshi.com/en/developers/changes): the change feed and a Google Sheets recipe.
 
 ## Versions
 

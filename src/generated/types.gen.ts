@@ -33,7 +33,7 @@ export type AccountBalanceUpdatedEvent = {
     id: string;
     object: 'event';
     /**
-     * Who made the change: app, api, bank_sync, email, import, recurring, assistant or test.
+     * Who made the change: app, api, bank_sync, import, recurring, categorize, rule, budget or test. Every write of a request authenticated by an API key is api.
      */
     source: string;
     /**
@@ -80,7 +80,7 @@ export type AccountConnection = {
 
 export type AccountListResponse = {
     /**
-     * And AccountOverdraftLimit are the limits in the account's own currency, next to account_current_balance: with ?currency= the credit_limit and overdraft_limit fields are converted into the display currency, so a tile that shows the balance in the account's currency compares it with these.
+     * `account_credit_limit` and `account_overdraft_limit` are the limits in the account's own currency, next to account_current_balance: with ?currency= the credit_limit and overdraft_limit fields are converted into the display currency, so a tile that shows the balance in the account's currency compares it with these.
      */
     account_credit_limit?: string | null;
     account_currency_info: AccountsCurrencyInfo;
@@ -97,7 +97,7 @@ export type AccountListResponse = {
      */
     account_share_amount?: string | null;
     /**
-     * The interest rate in percent a year (14.5 = 14,5% річних), at most 2 decimals, 0–100: a deposit's or savings account's, a credit card's after its grace period, a credit line's, loan's or mortgage's.
+     * The interest rate in percent a year (14.5 = 14.5% a year), at most 2 decimals, 0–100: a deposit's or savings account's, a credit card's after its grace period, a credit line's, loan's or mortgage's.
      */
     annual_rate?: string | null;
     /**
@@ -143,7 +143,7 @@ export type AccountListResponse = {
      */
     goal_date?: string | null;
     /**
-     * The longest interest-free period the bank states (1–200): «до 62 днів». Descriptive: the due day sets the date.
+     * The longest interest-free period the bank states (1–200). Descriptive: the due day sets the date.
      */
     grace_period_days?: number | null;
     gradient_direction?: number | null;
@@ -171,7 +171,7 @@ export type AccountListResponse = {
         [key: string]: unknown;
     } | null;
     /**
-     * The least the minimum payment can be, in the account's currency («але не менше 100 ₴»). The minimum due is the larger of the percent of the debt and this, at most the debt.
+     * The least the minimum payment can be, in the account's currency. The minimum due is the larger of the percent of the debt and this, at most the debt.
      */
     minimum_payment_amount?: string | null;
     /**
@@ -184,11 +184,11 @@ export type AccountListResponse = {
      */
     overdraft_limit?: string | null;
     /**
-     * The day of the month by which the minimum payment is due and the grace period ends (1–31; in a shorter month, its last day): «до 25 числа».
+     * The day of the month by which the minimum payment is due and the grace period ends (1–31; in a shorter month, its last day).
      */
     payment_due_day?: number | null;
     /**
-     * Reserved; not returned yet. Account sharing, «Моя частка» (docs/roadmaps/account-sharing.md §5.6): the part of current_balance that counts in this space's totals, in the same currency: the requester's capital on an account pooled with them, the balance less the grantees' capital on an account this space pools with others. Absent where the whole balance counts. Totals count include_in_net_worth ? (share_amount ?? current_balance) : 0, with the usual sign rules.
+     * Reserved; not returned yet. Account sharing, “My part”: the part of current_balance that counts in this space's totals, in the same currency: the requester's capital on an account pooled with them, the balance less the grantees' capital on an account this space pools with others. Absent where the whole balance counts. Totals count include_in_net_worth ? (share_amount ?? current_balance) : 0, with the usual sign rules.
      */
     share_amount?: string | null;
     /**
@@ -201,11 +201,11 @@ export type AccountListResponse = {
     source?: AccountSource | null;
     space_id: string;
     /**
-     * The day the deposit, loan or credit line ends («до 12 травня 2027»). Kept as entered: it isn't derived from term_months.
+     * The day the deposit, loan or credit line ends. Kept as entered: it isn't derived from term_months.
      */
     term_end_date?: string | null;
     /**
-     * The term in months (1–600): «депозит на 12 місяців».
+     * The term in months (1–600).
      */
     term_months?: number | null;
     type: AccountType;
@@ -227,7 +227,7 @@ export type AccountListResponseListEnvelope = {
 
 export type AccountResponse = {
     /**
-     * The interest rate in percent a year (14.5 = 14,5% річних), at most 2 decimals, 0–100: a deposit's or savings account's, a credit card's after its grace period, a credit line's, loan's or mortgage's.
+     * The interest rate in percent a year (14.5 = 14.5% a year), at most 2 decimals, 0–100: a deposit's or savings account's, a credit card's after its grace period, a credit line's, loan's or mortgage's.
      */
     annual_rate?: string | null;
     /**
@@ -269,7 +269,7 @@ export type AccountResponse = {
      */
     goal_date?: string | null;
     /**
-     * The longest interest-free period the bank states (1–200): «до 62 днів». Descriptive: the due day sets the date.
+     * The longest interest-free period the bank states (1–200). Descriptive: the due day sets the date.
      */
     grace_period_days?: number | null;
     gradient_direction?: number | null;
@@ -297,7 +297,7 @@ export type AccountResponse = {
         [key: string]: unknown;
     } | null;
     /**
-     * The least the minimum payment can be, in the account's currency («але не менше 100 ₴»). The minimum due is the larger of the percent of the debt and this, at most the debt.
+     * The least the minimum payment can be, in the account's currency. The minimum due is the larger of the percent of the debt and this, at most the debt.
      */
     minimum_payment_amount?: string | null;
     /**
@@ -310,11 +310,11 @@ export type AccountResponse = {
      */
     overdraft_limit?: string | null;
     /**
-     * The day of the month by which the minimum payment is due and the grace period ends (1–31; in a shorter month, its last day): «до 25 числа».
+     * The day of the month by which the minimum payment is due and the grace period ends (1–31; in a shorter month, its last day).
      */
     payment_due_day?: number | null;
     /**
-     * Reserved; not returned yet. Account sharing, «Моя частка» (docs/roadmaps/account-sharing.md §5.6): the part of current_balance that counts in this space's totals, in the same currency: the requester's capital on an account pooled with them, the balance less the grantees' capital on an account this space pools with others. Absent where the whole balance counts. Totals count include_in_net_worth ? (share_amount ?? current_balance) : 0, with the usual sign rules.
+     * Reserved; not returned yet. Account sharing, “My part”: the part of current_balance that counts in this space's totals, in the same currency: the requester's capital on an account pooled with them, the balance less the grantees' capital on an account this space pools with others. Absent where the whole balance counts. Totals count include_in_net_worth ? (share_amount ?? current_balance) : 0, with the usual sign rules.
      */
     share_amount?: string | null;
     /**
@@ -327,11 +327,11 @@ export type AccountResponse = {
     source?: AccountSource | null;
     space_id: string;
     /**
-     * The day the deposit, loan or credit line ends («до 12 травня 2027»). Kept as entered: it isn't derived from term_months.
+     * The day the deposit, loan or credit line ends. Kept as entered: it isn't derived from term_months.
      */
     term_end_date?: string | null;
     /**
-     * The term in months (1–600): «депозит на 12 місяців».
+     * The term in months (1–600).
      */
     term_months?: number | null;
     type: AccountType;
@@ -364,7 +364,7 @@ export type AccountType = 'account' | 'bonus' | 'card' | 'checking' | 'credit' |
 
 export type AccountWithConvertedBalance = {
     /**
-     * The interest rate in percent a year (14.5 = 14,5% річних), at most 2 decimals, 0–100: a deposit's or savings account's, a credit card's after its grace period, a credit line's, loan's or mortgage's.
+     * The interest rate in percent a year (14.5 = 14.5% a year), at most 2 decimals, 0–100: a deposit's or savings account's, a credit card's after its grace period, a credit line's, loan's or mortgage's.
      */
     annual_rate?: string | null;
     /**
@@ -419,7 +419,7 @@ export type AccountWithConvertedBalance = {
      */
     goal_date?: string | null;
     /**
-     * The longest interest-free period the bank states (1–200): «до 62 днів». Descriptive: the due day sets the date.
+     * The longest interest-free period the bank states (1–200). Descriptive: the due day sets the date.
      */
     grace_period_days?: number | null;
     gradient_direction?: number | null;
@@ -447,7 +447,7 @@ export type AccountWithConvertedBalance = {
         [key: string]: unknown;
     } | null;
     /**
-     * The least the minimum payment can be, in the account's currency («але не менше 100 ₴»). The minimum due is the larger of the percent of the debt and this, at most the debt.
+     * The least the minimum payment can be, in the account's currency. The minimum due is the larger of the percent of the debt and this, at most the debt.
      */
     minimum_payment_amount?: string | null;
     /**
@@ -460,11 +460,11 @@ export type AccountWithConvertedBalance = {
      */
     overdraft_limit?: string | null;
     /**
-     * The day of the month by which the minimum payment is due and the grace period ends (1–31; in a shorter month, its last day): «до 25 числа».
+     * The day of the month by which the minimum payment is due and the grace period ends (1–31; in a shorter month, its last day).
      */
     payment_due_day?: number | null;
     /**
-     * Reserved; not returned yet. Account sharing, «Моя частка» (docs/roadmaps/account-sharing.md §5.6): the part of current_balance that counts in this space's totals, in the same currency: the requester's capital on an account pooled with them, the balance less the grantees' capital on an account this space pools with others. Absent where the whole balance counts. Totals count include_in_net_worth ? (share_amount ?? current_balance) : 0, with the usual sign rules.
+     * Reserved; not returned yet. Account sharing, “My part”: the part of current_balance that counts in this space's totals, in the same currency: the requester's capital on an account pooled with them, the balance less the grantees' capital on an account this space pools with others. Absent where the whole balance counts. Totals count include_in_net_worth ? (share_amount ?? current_balance) : 0, with the usual sign rules.
      */
     share_amount?: string | null;
     /**
@@ -477,11 +477,11 @@ export type AccountWithConvertedBalance = {
     source?: AccountSource | null;
     space_id: string;
     /**
-     * The day the deposit, loan or credit line ends («до 12 травня 2027»). Kept as entered: it isn't derived from term_months.
+     * The day the deposit, loan or credit line ends. Kept as entered: it isn't derived from term_months.
      */
     term_end_date?: string | null;
     /**
-     * The term in months (1–600): «депозит на 12 місяців».
+     * The term in months (1–600).
      */
     term_months?: number | null;
     type: AccountType;
@@ -601,7 +601,7 @@ export type BudgetAllocationResponse = {
     display?: AllocationDisplay | null;
     id: string;
     /**
-     * Lists spending currencies without an exchange rate into the budget currency; that spending is not included in spent.
+     * `missing_rates` lists spending currencies without an exchange rate into the budget currency; that spending is not included in spent.
      */
     missing_rates?: Array<string> | null;
     /**
@@ -653,7 +653,7 @@ export type BudgetListItem = {
     period: BudgetPeriod;
     period_end: string;
     /**
-     * / PeriodEnd are the inclusive calendar dates (space timezone) of the current period, or of the period containing as_of.
+     * `period_start` / `period_end` are the inclusive calendar dates (space timezone) of the current period, or of the period containing as_of.
      */
     period_start: string;
     space_id: string;
@@ -694,14 +694,14 @@ export type BudgetResponse = {
     id: string;
     is_active: boolean;
     /**
-     * Lists spending currencies without an exchange rate into the budget currency; that spending is excluded from total_spent.
+     * `missing_rates` lists spending currencies without an exchange rate into the budget currency; that spending is excluded from total_spent.
      */
     missing_rates?: Array<string> | null;
     name: string;
     period: BudgetPeriod;
     period_end: string;
     /**
-     * / PeriodEnd are the inclusive calendar dates (space timezone) of the evaluated period: the current one, or the one containing the as_of query date.
+     * `period_start` / `period_end` are the inclusive calendar dates (space timezone) of the evaluated period: the current one, or the one containing the as_of query date.
      */
     period_start: string;
     progress: number;
@@ -761,7 +761,7 @@ export type BudgetThresholdReachedEvent = {
     id: string;
     object: 'event';
     /**
-     * Who made the change: app, api, bank_sync, email, import, recurring, assistant or test.
+     * Who made the change: app, api, bank_sync, import, recurring, categorize, rule, budget or test. Every write of a request authenticated by an API key is api.
      */
     source: string;
     /**
@@ -802,11 +802,11 @@ export type CashFlowResponse = {
     avg_monthly_income: string;
     currencyInfo: AnalyticsCurrencyInfo;
     /**
-     * Lists currencies whose amounts could not be converted into the response currency (no exchange rate available). Those amounts are excluded from the totals above; empty/omitted when everything converted.
+     * `missing_rates` lists currencies whose amounts could not be converted into the response currency (no exchange rate available). Those amounts are excluded from the totals above; empty/omitted when everything converted.
      */
     missing_rates?: Array<string> | null;
     /**
-     * Counts the business-space transactions of the period that have no UAH value yet (the NBU rate of their legal date is not published, or the valuation has not run): they are left out of the totals above until valued. Omitted when 0 and in personal spaces.
+     * `pending_valuation` counts the business-space transactions of the period that have no UAH value yet (the NBU rate of their legal date is not published, or the valuation has not run): they are left out of the totals above until valued. Omitted when 0 and in personal spaces.
      */
     pending_valuation?: number | null;
     points?: Array<CashFlowPoint> | null;
@@ -830,7 +830,7 @@ export type CashFlowResponseEnvelope = {
 
 export type Category = {
     /**
-     * Marks the subcategory of a business under «Дохід» in its owner's personal space: the owner's money from that business lands here. Renaming or moving it keeps the link.
+     * `business_space_id` marks the subcategory of a business under “Income” in its owner's personal space: the owner's money from that business lands here. Renaming or moving it keeps the link.
      */
     business_space_id?: string | null;
     children?: Array<Category> | null;
@@ -843,23 +843,23 @@ export type Category = {
      */
     emoji?: string | null;
     /**
-     * The category's icon: a free Hugeicons slug from the brand category icon set (Packages/brand/icons.json), e.g. "shopping-cart-01". Omitted when the category has none (clients draw "tag-01").
+     * The category's icon: a free Hugeicons slug from the brand category icon set, e.g. "shopping-cart-01". Omitted when the category has none (clients draw "tag-01").
      */
     icon?: string | null;
     id: string;
     is_default: boolean;
     /**
-     * The display name in the request language (Accept-Language, else the user's saved language, else uk). A built-in category that still has its seed name is translated ("Продукти" / "Groceries"); custom and renamed categories are returned as stored.
+     * The display name in the request language (Accept-Language, else the user's saved language, else uk). A built-in category that still has its seed name is translated ("Groceries" in English); custom and renamed categories are returned as stored.
      */
     name: string;
     parent_id?: string | null;
     space_id: string;
     /**
-     * Subscription («Підписки») or mandatory («Обов’язкові»); omitted for any other category. The calendar's filter chips and the yearly subscriptions sum read it.
+     * Subscription or mandatory; omitted for any other category. The calendar's filter chips and the yearly subscriptions sum read it.
      */
     spending_kind?: 'subscription' | 'mandatory' | null;
     /**
-     * Identifies a built-in (seeded) category, e.g. "food.groceries"; stable across languages and renames. Omitted for custom categories.
+     * `system_key` identifies a built-in (seeded) category, e.g. "food.groceries"; stable across languages and renames. Omitted for custom categories.
      */
     system_key?: string | null;
     type: CategoryType;
@@ -903,7 +903,7 @@ export type CategoryAnalyticsResponse = {
     categories_count: number;
     currencyInfo: AnalyticsCurrencyInfo;
     /**
-     * Lists currencies whose amounts could not be converted into the response currency (no exchange rate available). Those amounts are excluded from the totals above; empty/omitted when everything converted.
+     * `missing_rates` lists currencies whose amounts could not be converted into the response currency (no exchange rate available). Those amounts are excluded from the totals above; empty/omitted when everything converted.
      */
     missing_rates?: Array<string> | null;
     /**
@@ -911,7 +911,7 @@ export type CategoryAnalyticsResponse = {
      */
     net: string;
     /**
-     * Counts the business-space transactions of the period that have no UAH value yet (the NBU rate of their legal date is not published, or the valuation has not run): they are left out of the totals above until valued. Omitted when 0 and in personal spaces.
+     * `pending_valuation` counts the business-space transactions of the period that have no UAH value yet (the NBU rate of their legal date is not published, or the valuation has not run): they are left out of the totals above until valued. Omitted when 0 and in personal spaces.
      */
     pending_valuation?: number | null;
     period: DateRange;
@@ -983,6 +983,44 @@ export type CategorySummary = {
 
 export type CategoryType = 'expense' | 'income' | 'transfer';
 
+export type Change = {
+    /**
+     * The object as its list endpoint returns it now (GET /v1/transactions, /v1/accounts, /v1/categories without children, /v1/budgets, /v1/recurring-transactions); absent for a delete.
+     */
+    data?: {
+        [key: string]: unknown;
+    } | null;
+    /**
+     * ID is the object's id.
+     */
+    id: string;
+    /**
+     * Op: upsert (the object is new or changed: data is it now) or delete (gone, or no longer visible to the caller).
+     */
+    op: 'upsert' | 'delete';
+    type: 'transaction' | 'account' | 'category' | 'budget' | 'recurring_transaction';
+};
+
+export type ChangesResponse = {
+    /**
+     * More changes are waiting now; read again with next_cursor right away.
+     */
+    has_more: boolean;
+    items: Array<Change>;
+    /**
+     * `next_cursor` continues after this page: keep it and send it next time, even when items is empty.
+     */
+    next_cursor: string;
+};
+
+export type ChangesResponseEnvelope = {
+    data: ChangesResponse;
+    /**
+     * Always true
+     */
+    success: boolean;
+};
+
 /**
  * The `connection.status_changed` event, as an endpoint receives it.
  */
@@ -1011,7 +1049,7 @@ export type ConnectionStatusChangedEvent = {
     id: string;
     object: 'event';
     /**
-     * Who made the change: app, api, bank_sync, email, import, recurring, assistant or test.
+     * Who made the change: app, api, bank_sync, import, recurring, categorize, rule, budget or test. Every write of a request authenticated by an API key is api.
      */
     source: string;
     /**
@@ -1025,6 +1063,27 @@ export type ConnectionStatusChangedEvent = {
     type: 'connection.status_changed';
 };
 
+export type CreatePlaceRequest = {
+    /**
+     * `city_ref` keeps a live pick's city under the person's Name; `provider_ref` is an Apple Place ID ("apple:…").
+     */
+    city_ref?: string | null;
+    /**
+     * The device's fix, with Name.
+     */
+    device?: PointName;
+    name?: string | null;
+    /**
+     * A point dropped on the map, with Name (required).
+     */
+    pin?: PointName;
+    provider_ref?: string | null;
+    /**
+     * Ref stores a result of ours: "gers:…" or "city:…".
+     */
+    ref?: string | null;
+};
+
 export type CreateSourceRequest = {
     /**
      * True by default: the app then changes only its rows' category, merchant, note and tags (a row can still be deleted, and the source never brings it back), and adds no rows to its accounts. A writable source's accounts take manual rows too, and its rows can be edited; a later push of the same row overwrites the edit.
@@ -1035,7 +1094,7 @@ export type CreateSourceRequest = {
      */
     kind?: 'bank' | 'card' | 'broker' | 'crypto' | 'income' | 'other';
     /**
-     * How the source shows in Settings › Підключення, 1 to 80 characters.
+     * How the source shows in Settings › Connections, 1 to 80 characters.
      */
     name: string;
 };
@@ -1068,6 +1127,12 @@ export type CreateTransactionRequest = {
      */
     original_amount?: string;
     original_currency?: string;
+    place?: CreatePlaceRequest;
+    /**
+     * A place of the space, or Place a choice to store with the row in the same database transaction. `place_source` says how the row got it: device, picked, receipt, merchant (approximate) or ai. Ignored while places are off (feature_flags.places).
+     */
+    place_id?: string;
+    place_source?: 'device' | 'picked' | 'receipt' | 'merchant' | 'ai';
     /**
      * Used by the Degroshi apps; leave it out.
      */
@@ -1082,6 +1147,10 @@ export type CreateTransactionRequest = {
     };
     provider_ref?: string;
     provider_type?: string;
+    /**
+     * `recurring_occurrence` confirms a regular payment with this row: the row is created and the rule's occurrence on that date settled together, or neither. 404 RCR_008 (no such rule in the space), 409 RCR_031 (the rule only tracks its payments), 409 RCR_035 (a loan payment, posted as a transfer: “Pay” settles it), 409 RCR_004 (paused), 409 RCR_029 (already paid or skipped), 400 RCR_028 (not a day of its schedule).
+     */
+    recurring_occurrence?: RecurringOccurrenceRef;
     status?: 'completed' | 'pending' | 'cancelled';
     /**
      * Tags of the space to put on the row.
@@ -1106,7 +1175,7 @@ export type DayTotal = {
      */
     earned: string;
     /**
-     * Marks a day with a business row still waiting for its NBU rate: that row counts at the display rate, so the day's sum may change.
+     * `rate_pending` marks a day with a business row still waiting for its NBU rate: that row counts at the display rate, so the day's sum may change.
      */
     rate_pending?: boolean | null;
     /**
@@ -1269,7 +1338,7 @@ export type ImportCompletedEvent = {
     id: string;
     object: 'event';
     /**
-     * Who made the change: app, api, bank_sync, email, import, recurring, assistant or test.
+     * Who made the change: app, api, bank_sync, import, recurring, categorize, rule, budget or test. Every write of a request authenticated by an API key is api.
      */
     source: string;
     /**
@@ -1292,6 +1361,59 @@ export type LastPaidResponse = {
     amount: string;
     date: string;
     transaction_id: string;
+};
+
+export type LinkedActivityLeg = {
+    chain?: string | null;
+    currency?: string | null;
+    /**
+     * Direction: in, out, or self (a position of a derivative trade).
+     */
+    direction: 'in' | 'out' | 'self';
+    icon_url?: string | null;
+    name?: string | null;
+    /**
+     * The amount of the asset that moved, always positive.
+     */
+    quantity: string;
+    symbol: string;
+    /**
+     * Its fiat value at the time, in Currency.
+     */
+    value?: string | null;
+};
+
+export type LinkedActivityResponse = {
+    account_id: string;
+    /**
+     * The network it happened on: a wallet activity's chain, or the network an exchange's deposit or withdrawal names. Absent when unknown (an exchange trade).
+     */
+    chain?: string | null;
+    /**
+     * Chain's display name («binance-smart-chain» → «BNB Chain»).
+     */
+    chain_name?: string | null;
+    /**
+     * The page of `tx_hash` in its chain's explorer; absent when the chain isn't known, then the hash is shown as copyable text.
+     */
+    explorer_url?: string | null;
+    fee?: LinkedActivityLeg | null;
+    id: string;
+    /**
+     * Kind: send, receive, trade, convert, transfer, deposit, withdraw, fee, bonus, stake, unstake, borrow, repay, approve, mint, burn, other.
+     */
+    kind: string;
+    legs: Array<LinkedActivityLeg>;
+    occurred_at: string;
+    /**
+     * The connection's provider: "zerion" for a wallet, "ccxt:<venue>" for an exchange.
+     */
+    provider: string;
+    status: 'confirmed' | 'pending' | 'failed';
+    /**
+     * The on-chain transaction hash; absent when the activity has none.
+     */
+    tx_hash?: string | null;
 };
 
 export type MerchantActivity = {
@@ -1335,11 +1457,11 @@ export type MerchantAnalyticsResponse = {
      */
     merchants: Array<MerchantActivity>;
     /**
-     * Lists currencies without an exchange rate; their amounts are left out. Omitted when everything converted.
+     * `missing_rates` lists currencies without an exchange rate; their amounts are left out. Omitted when everything converted.
      */
     missing_rates?: Array<string> | null;
     /**
-     * Counts the business-space operations of the period that have no UAH value yet (left out). Omitted when 0.
+     * `pending_valuation` counts the business-space operations of the period that have no UAH value yet (left out). Omitted when 0.
      */
     pending_valuation?: number | null;
     previous_from: string;
@@ -1401,7 +1523,7 @@ export type Meta = {
     total_pages: number;
 };
 
-export type Mode = 'post' | 'track_only';
+export type Mode = 'post' | 'track_only' | 'confirm';
 
 export type MySpaceResponse = {
     id: string;
@@ -1441,7 +1563,7 @@ export type NetWorthResponse = {
     calculated_at: string;
     currency_info: AccountsCurrencyInfo;
     /**
-     * Lists account currencies without an exchange rate into base_currency; those accounts are excluded from the totals.
+     * `missing_rates` lists account currencies without an exchange rate into base_currency; those accounts are excluded from the totals.
      */
     missing_rates?: Array<string> | null;
     /**
@@ -1469,7 +1591,7 @@ export type NetWorthResponseEnvelope = {
 export type NetWorthTimeSeriesResponse = {
     currencyInfo: AnalyticsCurrencyInfo;
     /**
-     * Lists currencies whose amounts could not be converted into the response currency (no exchange rate available). Those amounts are excluded from the totals above; empty/omitted when everything converted.
+     * `missing_rates` lists currencies whose amounts could not be converted into the response currency (no exchange rate available). Those amounts are excluded from the totals above; empty/omitted when everything converted.
      */
     missing_rates?: Array<string> | null;
     points?: Array<NetWorthPoint> | null;
@@ -1482,6 +1604,8 @@ export type NetWorthTimeSeriesResponseEnvelope = {
      */
     success: boolean;
 };
+
+export type ObjectType = 'transaction' | 'account' | 'category' | 'budget' | 'recurring_transaction';
 
 export type OccurrenceDayTotal = {
     date: string;
@@ -1547,7 +1671,7 @@ export type OccurrenceResponse = {
      */
     merchant_brand?: BrandResponse | null;
     /**
-     * The rule's: post (the server writes the operation) or track_only (it waits for the account's own row).
+     * The rule's: confirm, post (the server writes the operation) or track_only (it waits for the account's own row).
      */
     mode: Mode;
     note?: string | null;
@@ -1557,7 +1681,7 @@ export type OccurrenceResponse = {
     project_id?: string | null;
     rule_id: string;
     /**
-     * Planned (still ahead, or waiting within its window), paid, skipped, missing (a track_only payment whose window closed with no row) or paused (the rule was paused on that day). Past items come only with with_past.
+     * Planned (still ahead, or waiting within its window), awaiting_confirmation (a confirm rule's payment day came and nobody confirmed or skipped it yet: never paid, never spent), paid, skipped, missing (a track_only payment whose window closed with no row) or paused (the rule was paused on that day). Past items come only with with_past.
      */
     status: OccurrenceStatus;
     /**
@@ -1571,7 +1695,7 @@ export type OccurrenceResponse = {
     wait_until?: string | null;
 };
 
-export type OccurrenceStatus = 'planned' | 'paid' | 'skipped' | 'missing' | 'paused';
+export type OccurrenceStatus = 'planned' | 'paid' | 'skipped' | 'missing' | 'paused' | 'awaiting_confirmation';
 
 export type OccurrenceTotals = {
     currency: string;
@@ -1588,7 +1712,7 @@ export type OccurrenceTotals = {
      */
     income: string;
     /**
-     * Lists currencies without a rate into the display currency; their occurrences are left out of the totals.
+     * `missing_rates` lists currencies without a rate into the display currency; their occurrences are left out of the totals.
      */
     missing_rates?: Array<string> | null;
     /**
@@ -1622,10 +1746,19 @@ export type OccurrencesResponseEnvelope = {
     success: boolean;
 };
 
+export type PlacesKind = 'poi' | 'city' | 'country' | 'pin' | 'online';
+
+export type PointName = {
+    lat?: number | null;
+    lng?: number | null;
+};
+
 export type PossibleDuplicate = {
     external_id: string;
     matches?: Array<string> | null;
 };
+
+export type Precision = 'exact' | 'city' | 'country';
 
 export type PushBatchRequest = {
     items: Array<PushItem>;
@@ -1731,7 +1864,7 @@ export type PushOriginal = {
 export type PushedPage = {
     items?: Array<PushedRow> | null;
     /**
-     * Fetches the next (older) page; absent on the last one.
+     * `next_cursor` fetches the next (older) page; absent on the last one.
      */
     next_cursor?: string | null;
 };
@@ -1773,7 +1906,7 @@ export type ReactionsSummary = {
      */
     glyph?: 'thanks' | 'ok' | 'question' | 'later' | null;
     /**
-     * OpenQuestion: the latest question glyph has no comment from another member after it.
+     * The latest question glyph has no comment from another member after it.
      */
     open_question: boolean;
 };
@@ -1801,7 +1934,7 @@ export type RecurringDueEvent = {
     id: string;
     object: 'event';
     /**
-     * Who made the change: app, api, bank_sync, email, import, recurring, assistant or test.
+     * Who made the change: app, api, bank_sync, import, recurring, categorize, rule, budget or test. Every write of a request authenticated by an API key is api.
      */
     source: string;
     /**
@@ -1813,6 +1946,11 @@ export type RecurringDueEvent = {
      */
     test: boolean;
     type: 'recurring.due';
+};
+
+export type RecurringOccurrenceRef = {
+    date: string;
+    rule_id: string;
 };
 
 export type RecurringResponse = {
@@ -1841,7 +1979,7 @@ export type RecurringResponse = {
     id: string;
     is_active: boolean;
     /**
-     * IsVariable: those amounts differ by more than 2% (show the average as approximate).
+     * The rule's amounts differ by more than 2% (show the average as approximate).
      */
     is_variable: boolean;
     /**
@@ -1852,7 +1990,7 @@ export type RecurringResponse = {
     merchant?: string | null;
     merchant_brand?: BrandResponse | null;
     /**
-     * Post (the server writes the operation) or track_only (it waits for the account's own row).
+     * Confirm, post (the server writes the operation) or track_only (it waits for the account's own row). A loan payment is never confirm.
      */
     mode: Mode;
     next_run_at: string;
@@ -1863,7 +2001,7 @@ export type RecurringResponse = {
     paid_average_3m?: string | null;
     paid_count_3m: number;
     /**
-     * When the rule was paused («На паузі з 10 жовтня»): set whenever is_active turns false (by a person, the processor or the account's archiving), omitted while active and for rules paused before 2026-11 (the day wasn't recorded).
+     * When the rule was paused: set whenever is_active turns false (by a person, the processor or the account's archiving), omitted while active and for rules paused before 2026-11 (the day wasn't recorded).
      */
     paused_at?: string | null;
     /**
@@ -1872,7 +2010,7 @@ export type RecurringResponse = {
     project_id?: string | null;
     reminder_days_before: number;
     /**
-     * And ReminderDaysBefore are the rule's reminder (0 = on the day, at 9:00).
+     * `reminder_enabled` and `reminder_days_before` are the rule's reminder (0 = on the day, at 9:00).
      */
     reminder_enabled: boolean;
     space_id: string;
@@ -1955,11 +2093,11 @@ export type SpendingResponse = {
     categories?: Array<CategorySummary> | null;
     currencyInfo: AnalyticsCurrencyInfo;
     /**
-     * Lists currencies whose amounts could not be converted into the response currency (no exchange rate available). Those amounts are excluded from the totals above; empty/omitted when everything converted.
+     * `missing_rates` lists currencies whose amounts could not be converted into the response currency (no exchange rate available). Those amounts are excluded from the totals above; empty/omitted when everything converted.
      */
     missing_rates?: Array<string> | null;
     /**
-     * Counts the business-space transactions of the period that have no UAH value yet (the NBU rate of their legal date is not published, or the valuation has not run): they are left out of the totals above until valued. Omitted when 0 and in personal spaces.
+     * `pending_valuation` counts the business-space transactions of the period that have no UAH value yet (the NBU rate of their legal date is not published, or the valuation has not run): they are left out of the totals above until valued. Omitted when 0 and in personal spaces.
      */
     pending_valuation?: number | null;
     period: DateRange;
@@ -1983,7 +2121,7 @@ export type Status = 'active' | 'paused';
 export type SummaryResponse = {
     currencyInfo: AnalyticsCurrencyInfo;
     /**
-     * Lists currencies whose amounts could not be converted into the response currency (no exchange rate available). Those amounts are excluded from the totals above; empty/omitted when everything converted.
+     * `missing_rates` lists currencies whose amounts could not be converted into the response currency (no exchange rate available). Those amounts are excluded from the totals above; empty/omitted when everything converted.
      */
     missing_rates?: Array<string> | null;
     /**
@@ -1991,7 +2129,7 @@ export type SummaryResponse = {
      */
     net_savings: string;
     /**
-     * Counts the business-space transactions of the period that have no UAH value yet (the NBU rate of their legal date is not published, or the valuation has not run): they are left out of the totals above until valued. Omitted when 0 and in personal spaces.
+     * `pending_valuation` counts the business-space transactions of the period that have no UAH value yet (the NBU rate of their legal date is not published, or the valuation has not run): they are left out of the totals above until valued. Omitted when 0 and in personal spaces.
      */
     pending_valuation?: number | null;
     period: DateRange;
@@ -2050,7 +2188,7 @@ export type TransactionCreatedEvent = {
     id: string;
     object: 'event';
     /**
-     * Who made the change: app, api, bank_sync, email, import, recurring, assistant or test.
+     * Who made the change: app, api, bank_sync, import, recurring, categorize, rule, budget or test. Every write of a request authenticated by an API key is api.
      */
     source: string;
     /**
@@ -2084,7 +2222,7 @@ export type TransactionDeletedEvent = {
     id: string;
     object: 'event';
     /**
-     * Who made the change: app, api, bank_sync, email, import, recurring, assistant or test.
+     * Who made the change: app, api, bank_sync, import, recurring, categorize, rule, budget or test. Every write of a request authenticated by an API key is api.
      */
     source: string;
     /**
@@ -2169,6 +2307,16 @@ export type TransactionMetadataResponse = {
     unallocatedAmount: string;
 };
 
+export type TransactionPlace = {
+    city?: string | null;
+    country_code?: string | null;
+    id: string;
+    is_approximate: boolean;
+    kind: 'poi' | 'city' | 'country' | 'pin' | 'online';
+    precision: 'exact' | 'city' | 'country';
+    title: string;
+};
+
 export type TransactionRelationshipsResponse = {
     accountId: string;
     categoryId?: string | null;
@@ -2194,11 +2342,11 @@ export type TransactionResponse = {
     category_icon?: string | null;
     category_id?: string | null;
     /**
-     * CategoryIsTransfer: the category is a transfer category («Перекази» and its children, or a custom one of type transfer), so the row counts as neither income nor spending, linked or not (pkg/moneyflow). Absent when false.
+     * The category is a transfer category (“Transfers” and its children, or a custom one of type transfer), so the row counts as neither income nor spending, linked or not. Absent when false.
      */
     category_is_transfer?: boolean | null;
     /**
-     * The category's display name in the request language: built-in categories that keep their seed name are translated ("Продукти" / "Groceries"), custom and renamed ones are as stored.
+     * The category's display name in the request language: built-in categories that keep their seed name are translated ("Groceries" in English), custom and renamed ones are as stored.
      */
     category_name?: string | null;
     /**
@@ -2206,16 +2354,16 @@ export type TransactionResponse = {
      */
     category_review?: CategoryReview | null;
     /**
-     * And CounterpartAccountName are the account of the other leg of a transfer ("Wise → PrivatBank"); omitted otherwise.
+     * `counterpart_account_id` and `counterpart_account_name` are the account of the other leg of a transfer ("Wise → PrivatBank"); omitted otherwise.
      */
     counterpart_account_id?: string | null;
     counterpart_account_name?: string | null;
     /**
-     * Marks a transfer leg whose other side is on an account the caller can't see: clients show "Other account", and linked_transfer_id, counterpart_account_* and fee_transaction_id (when the fee is on that account) are omitted. direction stays transfer_in/transfer_out. Also true on a leg of a cross-space transfer: its other leg lives in another space (counterpart_space).
+     * `counterpart_hidden` marks a transfer leg whose other side is on an account the caller can't see: clients show "Other account", and linked_transfer_id, counterpart_account_* and fee_transaction_id (when the fee is on that account) are omitted. direction stays transfer_in/transfer_out. Also true on a leg of a cross-space transfer: its other leg lives in another space (counterpart_space).
      */
     counterpart_hidden?: boolean | null;
     /**
-     * Names the other leg's space of a cross-space transfer: its name, or "Інший простір" / "Other space" when the caller is not a member of it or can't see its account (counterpart_space_hidden). counterpart_space_id, counterpart_account_* and counterpart_transaction_id are set only when the caller can see it.
+     * `counterpart_space` names the other leg's space of a cross-space transfer: its name, or "Other space" (in the request language) when the caller is not a member of it or can't see its account (counterpart_space_hidden). counterpart_space_id, counterpart_account_* and counterpart_transaction_id are set only when the caller can see it.
      */
     counterpart_space?: string | null;
     counterpart_space_hidden?: boolean | null;
@@ -2229,7 +2377,7 @@ export type TransactionResponse = {
      */
     counterparty_id?: string | null;
     /**
-     * Marks the personal leg of a cross-space transfer between a business and its owner's personal space: still a transfer, with the business's subcategory under «Дохід», and counted in this space's income: an incoming leg adds its amount, an outgoing one (a top-up of the business) subtracts it; never in spending.
+     * `counts_as_income` marks the personal leg of a cross-space transfer between a business and its owner's personal space: still a transfer, with the business's subcategory under “Income”, and counted in this space's income: an incoming leg adds its amount, an outgoing one (a top-up of the business) subtracts it; never in spending.
      */
     counts_as_income?: boolean | null;
     created_at: string;
@@ -2242,7 +2390,7 @@ export type TransactionResponse = {
      */
     created_by_name?: string | null;
     /**
-     * Marks a leg of a cross-space transfer (money moved between two linked spaces of the same owner, e.g. a personal card and a ФОП account): both legs carry it.
+     * `cross_space_transfer_id` marks a leg of a cross-space transfer (money moved between two linked spaces of the same owner, e.g. a personal card and a sole proprietor's account): both legs carry it.
      */
     cross_space_transfer_id?: string | null;
     description: string;
@@ -2256,7 +2404,7 @@ export type TransactionResponse = {
     exchange_rate?: string | null;
     externalData: TransactionExternalDataResponse;
     /**
-     * Marks a transfer fee: the id of the transfer's outgoing leg (the transfer's id). Omitted for other transactions.
+     * `fee_for_transfer_id` marks a transfer fee: the id of the transfer's outgoing leg (the transfer's id). Omitted for other transactions.
      */
     fee_for_transfer_id?: string | null;
     /**
@@ -2268,15 +2416,19 @@ export type TransactionResponse = {
     isDeleted: boolean;
     is_split: boolean;
     /**
-     * "portfolio_transfer" for a transfer between two of the space's portfolio accounts (include_portfolio_transfers): its other fields are a list row's, PortfolioTransfer carries the transfer, and it is read-only. Absent on a transaction.
+     * "portfolio_transfer" for a transfer between two of the space's portfolio accounts (include_portfolio_transfers): its other fields are a list row's, `portfolio_transfer` carries the transfer, and it is read-only. Absent on a transaction.
      */
     kind?: 'portfolio_transfer' | null;
+    /**
+     * The wallet or exchange activity it was recorded from: network, hash with its explorer link, what moved and the fee. Omitted when it wasn't recorded from one the caller can see.
+     */
+    linked_activity?: LinkedActivityResponse | null;
     linked_transfer_id?: string | null;
     merchant?: string | null;
     merchant_brand?: BrandResponse | null;
     metadata: TransactionMetadataResponse;
     /**
-     * Marks money coming in that is the person's own: left out of income, budgets and recaps, still in the account's balance. Omitted when false.
+     * `not_income` marks money coming in that is the person's own: left out of income, budgets and recaps, still in the account's balance. Omitted when false.
      */
     not_income?: boolean | null;
     note?: string | null;
@@ -2286,6 +2438,12 @@ export type TransactionResponse = {
     original_amount?: string | null;
     original_currency?: string | null;
     parent_id?: string | null;
+    place?: TransactionPlace | null;
+    /**
+     * `place_id`, `place_source` and Place are where the row happened: the place in the requester's language, as they may see it (another member's pin is its city); is_approximate for a place derived from a bank or CSV row. Omitted when none.
+     */
+    place_id?: string | null;
+    place_source?: 'device' | 'picked' | 'receipt' | 'merchant' | 'ai' | null;
     /**
      * The transfer of a row of kind "portfolio_transfer".
      */
@@ -2299,7 +2457,7 @@ export type TransactionResponse = {
      */
     reactions?: ReactionsSummary | null;
     /**
-     * Marks a row nothing may edit, delete or record (a portfolio transfer).
+     * `read_only` marks a row nothing may edit, delete or record (a portfolio transfer).
      */
     read_only?: boolean | null;
     /**
@@ -2308,7 +2466,7 @@ export type TransactionResponse = {
     recurring_rule_id?: string | null;
     relationships: TransactionRelationshipsResponse;
     /**
-     * And ServicePeriodTo are the period a business operation pays for: the accrual P&L spreads it over these days.
+     * `service_period_from` and `service_period_to` are the period a business operation pays for: the accrual P&L spreads it over these days.
      */
     service_period_from?: string | null;
     service_period_to?: string | null;
@@ -2378,7 +2536,7 @@ export type TransactionTimestampsResponse = {
 
 export type TransactionTreatment = {
     /**
-     * AffectsClosedPeriod: the row changes a period whose declaration was already due.
+     * The row changes a period whose declaration was already due.
      */
     affects_closed_period: boolean;
     /**
@@ -2391,11 +2549,11 @@ export type TransactionTreatment = {
     confidence: string;
     fiscal_receipt_missing: boolean;
     /**
-     * FiscalRequired: revenue that needs a fiscal receipt (none linked when FiscalReceiptMissing).
+     * Revenue that needs a fiscal receipt (none linked when `fiscal_receipt_missing`).
      */
     fiscal_required: boolean;
     /**
-     * NeedsReview: the review queue lists it.
+     * The review queue lists it.
      */
     needs_review: boolean;
     /**
@@ -2435,7 +2593,7 @@ export type TransactionUpdatedEvent = {
     id: string;
     object: 'event';
     /**
-     * Who made the change: app, api, bank_sync, email, import, recurring, assistant or test.
+     * Who made the change: app, api, bank_sync, import, recurring, categorize, rule, budget or test. Every write of a request authenticated by an API key is api.
      */
     source: string;
     /**
@@ -2470,7 +2628,7 @@ export type TransactionsBulkUpdatedEvent = {
     id: string;
     object: 'event';
     /**
-     * Who made the change: app, api, bank_sync, email, import, recurring, assistant or test.
+     * Who made the change: app, api, bank_sync, import, recurring, categorize, rule, budget or test. Every write of a request authenticated by an API key is api.
      */
     source: string;
     /**
@@ -2507,15 +2665,15 @@ export type TransferResponse = {
      */
     date: string;
     /**
-     * Value in the display currency the device sent (X-Display-Currency), converted at today's rate and rounded to cents; absent when that is ValueCurrency, none was sent or there is no value or rate. Clients show it in place of Value.
+     * Value in the display currency the device sent (X-Display-Currency), converted at today's rate and rounded to cents; absent when that is `value_currency`, none was sent or there is no value or rate. Clients show it in place of Value.
      */
     display?: TransferDisplay | null;
     /**
-     * TxHash's page in its chain's explorer (Etherscan, Solscan, OKLink for X Layer…); absent when the chain isn't known, then the hash is shown as copyable text.
+     * The page of `tx_hash` in its chain's explorer (Etherscan, Solscan, OKLink for X Layer…); absent when the chain isn't known, then the hash is shown as copyable text.
      */
     explorer_url?: string | null;
     /**
-     * And FromAccountName are the sending account; FromHidden marks one the caller can't see (shown as "another account"), and then both are absent. To* likewise.
+     * `from_account_id` and `from_account_name` are the sending account; `from_hidden` marks one the caller can't see (shown as "another account"), and then both are absent. To* likewise.
      */
     from_account_id?: string | null;
     from_account_name?: string | null;
@@ -2527,7 +2685,7 @@ export type TransferResponse = {
     in_activity_id?: string | null;
     occurred_at: string;
     /**
-     * And InActivityID are the two activities (each in its account's activity feed); absent for a side the caller can't see.
+     * `out_activity_id` and `in_activity_id` are the two activities (each in its account's activity feed); absent for a side the caller can't see.
      */
     out_activity_id?: string | null;
     /**
@@ -2539,7 +2697,7 @@ export type TransferResponse = {
     to_hidden: boolean;
     tx_hash?: string | null;
     /**
-     * The fiat value at the time, in ValueCurrency.
+     * The fiat value at the time, in `value_currency`.
      */
     value?: string | null;
     value_currency?: string | null;
@@ -2570,11 +2728,11 @@ export type TrendComparison = {
 export type TrendsResponse = {
     currencyInfo: AnalyticsCurrencyInfo;
     /**
-     * Lists currencies whose amounts could not be converted into the response currency (no exchange rate available). Those amounts are excluded from the totals above; empty/omitted when everything converted.
+     * `missing_rates` lists currencies whose amounts could not be converted into the response currency (no exchange rate available). Those amounts are excluded from the totals above; empty/omitted when everything converted.
      */
     missing_rates?: Array<string> | null;
     /**
-     * Counts the business-space transactions of the period that have no UAH value yet (the NBU rate of their legal date is not published, or the valuation has not run): they are left out of the totals above until valued. Omitted when 0 and in personal spaces.
+     * `pending_valuation` counts the business-space transactions of the period that have no UAH value yet (the NBU rate of their legal date is not published, or the valuation has not run): they are left out of the totals above until valued. Omitted when 0 and in personal spaces.
      */
     pending_valuation?: number | null;
     trends?: Array<TrendComparison> | null;
@@ -2620,15 +2778,15 @@ export type UpdateSourceRequest = {
 
 export type UpdateTransactionRequest = {
     /**
-     * Moves a plain income or expense to another open, manual account of the space in the same currency; its balance effect moves with it (422 TXN_ACCOUNT_CURRENCY_MISMATCH for another currency, TXN_ACCOUNT_CHANGE_NOT_ALLOWED for transfer legs, transfer fees and splits, TXN_ACCOUNT_NOT_MANUAL for bank-synced accounts).
+     * `account_id` moves a plain income or expense to another open, manual account of the space in the same currency; its balance effect moves with it (422 TXN_ACCOUNT_CURRENCY_MISMATCH for another currency, TXN_ACCOUNT_CHANGE_NOT_ALLOWED for transfer legs, transfer fees and splits, TXN_ACCOUNT_NOT_MANUAL for bank-synced accounts).
      */
     account_id?: string | null;
     /**
-     * The edited row's amount; on a transfer with to_amount or fee_amount it is the total that leaves the source account, fee included (see ToAmount).
+     * The edited row's amount; on a transfer with to_amount or fee_amount it is the total that leaves the source account, fee included (see `to_amount`).
      */
     amount?: string | null;
     /**
-     * Sets the category (a category of the space); null clears it.
+     * `category_id` sets the category (a category of the space); null clears it.
      */
     category_id?: string | null;
     /**
@@ -2660,7 +2818,7 @@ export type UpdateTransactionRequest = {
      */
     merchant_brand_id?: string | null;
     /**
-     * Marks an income row as the person's own money coming in (true, «Не дохід»: out of income, budgets and recaps, still in the balance) or counts it as income again (false). Only an income row that isn't a transfer leg takes true (422 VAL_001 otherwise).
+     * `not_income` marks an income row as the person's own money coming in (true, “Not income”: out of income, budgets and recaps, still in the balance) or counts it as income again (false). Only an income row that isn't a transfer leg takes true (422 VAL_001 otherwise).
      */
     not_income?: boolean | null;
     /**
@@ -2668,20 +2826,26 @@ export type UpdateTransactionRequest = {
      */
     note?: string | null;
     /**
-     * And OriginalCurrency record what a plain income or expense was paid in another currency (a card purchase abroad): original_currency sets or changes the currency (the account's own currency or "" clears both), original_amount the paid amount (default: the current paid amount, else the current amount). Without amount the charged amount is recomputed from the paid amount at the current exchange rate (422 TXN_063 when there is none); with amount it is kept as the bank's own figure. exchange_rate follows the two amounts. Values equal to the stored ones (amounts by value, the currency ignoring case) are echoes and change nothing: no re-conversion. null on either clears the paid amount, its currency and the rate like original_currency "", unless the other one sends a new value, which wins. Transfer legs and fees, splits and connected accounts' rows are refused (422 TXN_011 / TXN_ACCOUNT_CONNECTED).
+     * `original_amount` and `original_currency` record what a plain income or expense was paid in another currency (a card purchase abroad): original_currency sets or changes the currency (the account's own currency or "" clears both), original_amount the paid amount (default: the current paid amount, else the current amount). Without amount the charged amount is recomputed from the paid amount at the current exchange rate (422 TXN_063 when there is none); with amount it is kept as the bank's own figure. exchange_rate follows the two amounts. Values equal to the stored ones (amounts by value, the currency ignoring case) are echoes and change nothing: no re-conversion. null on either clears the paid amount, its currency and the rate like original_currency "", unless the other one sends a new value, which wins. Transfer legs and fees, splits and connected accounts' rows are refused (422 TXN_011 / TXN_ACCOUNT_CONNECTED).
      */
     original_amount?: string | null;
     /**
      * "" passes binding (the clear sentinel); any other value must be an ISO 4217 code (400 VAL_001, checked by the service).
      */
     original_currency?: string | null;
+    place?: CreatePlaceRequest;
+    /**
+     * `place_id` moves the row to another place of the space, Place stores a new choice first, `place_source` says how (default picked); a null place_id clears the place (with the X-Update-Contract: 2 header). Ignored while places are off.
+     */
+    place_id?: string | null;
+    place_source?: 'device' | 'picked' | 'receipt' | 'merchant' | 'ai' | null | null;
     status?: 'completed' | 'pending' | 'cancelled';
     /**
      * Replaces the transaction's tags (tags of the space, at most 20); [] removes them all, absent keeps them. On a transfer it applies to the edited leg.
      */
     tag_ids?: Array<string> | null;
     /**
-     * And FeeAmount edit the amounts of a transfer (either leg's id): with either of them the request reads like a transfer create — amount is the total that leaves the source account (fee included, default: the current one), to_amount what arrives, fee_amount the fee in the source currency (0 removes it). Absent fields keep their current value; a same-currency to_amount below amount books the difference as the fee. The fee expense is created, changed or removed to match. Rejected on transactions that are not transfer legs. Without either of them amount is the edited leg's own amount.
+     * `to_amount` and `fee_amount` edit the amounts of a transfer (either leg's id): with either of them the request reads like a transfer create — amount is the total that leaves the source account (fee included, default: the current one), to_amount what arrives, fee_amount the fee in the source currency (0 removes it). Absent fields keep their current value; a same-currency to_amount below amount books the difference as the fee. The fee expense is created, changed or removed to match. Rejected on transactions that are not transfer legs. Without either of them amount is the edited leg's own amount.
      */
     to_amount?: string | null;
     transaction_date?: string | null;
@@ -2693,7 +2857,7 @@ export type UpsertAccountRequest = {
      */
     currency: string;
     /**
-     * Marks money owed (a loan, a credit line); default false.
+     * `is_liability` marks money owed (a loan, a credit line); default false.
      */
     is_liability?: boolean | null;
     /**
@@ -2738,7 +2902,7 @@ export type WebhookEvent = {
     id: string;
     object: 'event';
     /**
-     * Who made the change: app, api, bank_sync, email, import, recurring, assistant or test.
+     * Who made the change: app, api, bank_sync, import, recurring, categorize, rule, budget or test. Every write of a request authenticated by an API key is api.
      */
     source: string;
     /**
@@ -2759,6 +2923,10 @@ export type ListAccountsData = {
          * The space to act in. A token bound to one space may leave it out.
          */
         'X-Space-ID'?: string;
+        /**
+         * The currency to show converted amounts and totals in (ISO 4217, for example EUR). Without it they are in your account's main currency; a query parameter that names the currency (currency, currencyCode or base) wins over it.
+         */
+        'X-Display-Currency'?: string;
     };
     path?: never;
     query?: {
@@ -2792,6 +2960,10 @@ export type ListAccountsErrors = {
      */
     403: ErrorResponse;
     /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
+    /**
      * Internal Server Error
      */
     500: ErrorResponse;
@@ -2815,6 +2987,10 @@ export type GetAccountsNetWorthData = {
          * The space to act in. A token bound to one space may leave it out.
          */
         'X-Space-ID'?: string;
+        /**
+         * The currency to show converted amounts and totals in (ISO 4217, for example EUR). Without it they are in your account's main currency; a query parameter that names the currency (currency, currencyCode or base) wins over it.
+         */
+        'X-Display-Currency'?: string;
     };
     path?: never;
     query?: {
@@ -2840,6 +3016,10 @@ export type GetAccountsNetWorthErrors = {
      */
     403: ErrorResponse;
     /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
+    /**
      * Internal Server Error
      */
     500: ErrorResponse;
@@ -2863,6 +3043,10 @@ export type GetAccountData = {
          * The space to act in. A token bound to one space may leave it out.
          */
         'X-Space-ID'?: string;
+        /**
+         * The currency to show converted amounts and totals in (ISO 4217, for example EUR). Without it they are in your account's main currency; a query parameter that names the currency (currency, currencyCode or base) wins over it.
+         */
+        'X-Display-Currency'?: string;
     };
     path: {
         /**
@@ -2888,6 +3072,10 @@ export type GetAccountErrors = {
      */
     404: ErrorResponse;
     /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
+    /**
      * Internal Server Error
      */
     500: ErrorResponse;
@@ -2911,6 +3099,10 @@ export type GetAnalyticsCashFlowData = {
          * The space to act in. A token bound to one space may leave it out.
          */
         'X-Space-ID'?: string;
+        /**
+         * The currency to show converted amounts and totals in (ISO 4217, for example EUR). Without it they are in your account's main currency; a query parameter that names the currency (currency, currencyCode or base) wins over it.
+         */
+        'X-Display-Currency'?: string;
     };
     path?: never;
     query: {
@@ -2943,6 +3135,10 @@ export type GetAnalyticsCashFlowErrors = {
      * Bad Request
      */
     400: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
 };
 
 export type GetAnalyticsCashFlowError = GetAnalyticsCashFlowErrors[keyof GetAnalyticsCashFlowErrors];
@@ -2963,6 +3159,10 @@ export type GetAnalyticsCategoriesData = {
          * The space to act in. A token bound to one space may leave it out.
          */
         'X-Space-ID'?: string;
+        /**
+         * The currency to show converted amounts and totals in (ISO 4217, for example EUR). Without it they are in your account's main currency; a query parameter that names the currency (currency, currencyCode or base) wins over it.
+         */
+        'X-Display-Currency'?: string;
     };
     path?: never;
     query: {
@@ -3003,6 +3203,10 @@ export type GetAnalyticsCategoriesErrors = {
      * Bad Request
      */
     400: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
 };
 
 export type GetAnalyticsCategoriesError = GetAnalyticsCategoriesErrors[keyof GetAnalyticsCategoriesErrors];
@@ -3023,6 +3227,10 @@ export type GetAnalyticsMerchantsData = {
          * The space to act in. A token bound to one space may leave it out.
          */
         'X-Space-ID'?: string;
+        /**
+         * The currency to show converted amounts and totals in (ISO 4217, for example EUR). Without it they are in your account's main currency; a query parameter that names the currency (currency, currencyCode or base) wins over it.
+         */
+        'X-Display-Currency'?: string;
     };
     path?: never;
     query: {
@@ -3075,6 +3283,10 @@ export type GetAnalyticsMerchantsErrors = {
      * Forbidden
      */
     403: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
 };
 
 export type GetAnalyticsMerchantsError = GetAnalyticsMerchantsErrors[keyof GetAnalyticsMerchantsErrors];
@@ -3095,6 +3307,10 @@ export type GetAnalyticsNetWorthData = {
          * The space to act in. A token bound to one space may leave it out.
          */
         'X-Space-ID'?: string;
+        /**
+         * The currency to show converted amounts and totals in (ISO 4217, for example EUR). Without it they are in your account's main currency; a query parameter that names the currency (currency, currencyCode or base) wins over it.
+         */
+        'X-Display-Currency'?: string;
     };
     path?: never;
     query: {
@@ -3127,6 +3343,10 @@ export type GetAnalyticsNetWorthErrors = {
      * Bad Request
      */
     400: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
 };
 
 export type GetAnalyticsNetWorthError = GetAnalyticsNetWorthErrors[keyof GetAnalyticsNetWorthErrors];
@@ -3147,6 +3367,10 @@ export type GetAnalyticsSpendingData = {
          * The space to act in. A token bound to one space may leave it out.
          */
         'X-Space-ID'?: string;
+        /**
+         * The currency to show converted amounts and totals in (ISO 4217, for example EUR). Without it they are in your account's main currency; a query parameter that names the currency (currency, currencyCode or base) wins over it.
+         */
+        'X-Display-Currency'?: string;
     };
     path?: never;
     query: {
@@ -3179,6 +3403,10 @@ export type GetAnalyticsSpendingErrors = {
      * Bad Request
      */
     400: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
 };
 
 export type GetAnalyticsSpendingError = GetAnalyticsSpendingErrors[keyof GetAnalyticsSpendingErrors];
@@ -3199,6 +3427,10 @@ export type GetAnalyticsSummaryData = {
          * The space to act in. A token bound to one space may leave it out.
          */
         'X-Space-ID'?: string;
+        /**
+         * The currency to show converted amounts and totals in (ISO 4217, for example EUR). Without it they are in your account's main currency; a query parameter that names the currency (currency, currencyCode or base) wins over it.
+         */
+        'X-Display-Currency'?: string;
     };
     path?: never;
     query: {
@@ -3235,6 +3467,10 @@ export type GetAnalyticsSummaryErrors = {
      * Bad Request
      */
     400: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
 };
 
 export type GetAnalyticsSummaryError = GetAnalyticsSummaryErrors[keyof GetAnalyticsSummaryErrors];
@@ -3255,6 +3491,10 @@ export type GetAnalyticsTrendsData = {
          * The space to act in. A token bound to one space may leave it out.
          */
         'X-Space-ID'?: string;
+        /**
+         * The currency to show converted amounts and totals in (ISO 4217, for example EUR). Without it they are in your account's main currency; a query parameter that names the currency (currency, currencyCode or base) wins over it.
+         */
+        'X-Display-Currency'?: string;
     };
     path?: never;
     query: {
@@ -3283,6 +3523,10 @@ export type GetAnalyticsTrendsErrors = {
      * Bad Request
      */
     400: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
 };
 
 export type GetAnalyticsTrendsError = GetAnalyticsTrendsErrors[keyof GetAnalyticsTrendsErrors];
@@ -3303,6 +3547,10 @@ export type ListBudgetsData = {
          * The space to act in. A token bound to one space may leave it out.
          */
         'X-Space-ID'?: string;
+        /**
+         * The currency to show converted amounts and totals in (ISO 4217, for example EUR). Without it they are in your account's main currency; a query parameter that names the currency (currency, currencyCode or base) wins over it.
+         */
+        'X-Display-Currency'?: string;
     };
     path?: never;
     query?: {
@@ -3328,6 +3576,10 @@ export type ListBudgetsErrors = {
      */
     403: ErrorResponse;
     /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
+    /**
      * Internal Server Error
      */
     500: ErrorResponse;
@@ -3351,6 +3603,10 @@ export type GetBudgetData = {
          * The space to act in. A token bound to one space may leave it out.
          */
         'X-Space-ID'?: string;
+        /**
+         * The currency to show converted amounts and totals in (ISO 4217, for example EUR). Without it they are in your account's main currency; a query parameter that names the currency (currency, currencyCode or base) wins over it.
+         */
+        'X-Display-Currency'?: string;
     };
     path: {
         /**
@@ -3384,6 +3640,10 @@ export type GetBudgetErrors = {
      * Not Found
      */
     404: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
     /**
      * Internal Server Error
      */
@@ -3428,6 +3688,10 @@ export type ListCategoriesErrors = {
      */
     403: ErrorResponse;
     /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
+    /**
      * Internal Server Error
      */
     500: ErrorResponse;
@@ -3467,6 +3731,10 @@ export type GetCategoryErrors = {
      * Not Found
      */
     404: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
 };
 
 export type GetCategoryError = GetCategoryErrors[keyof GetCategoryErrors];
@@ -3479,6 +3747,66 @@ export type GetCategoryResponses = {
 };
 
 export type GetCategoryResponse = GetCategoryResponses[keyof GetCategoryResponses];
+
+export type ListChangesData = {
+    body?: never;
+    headers?: {
+        /**
+         * The space to act in. A token bound to one space may leave it out.
+         */
+        'X-Space-ID'?: string;
+    };
+    path?: never;
+    query?: {
+        /**
+         * next_cursor of the previous page; omit to start from the beginning
+         */
+        cursor?: string;
+        /**
+         * Object types (any of them): transaction, account, category, budget, recurring_transaction; all the caller may read by default. Repeat the parameter or send comma separated names
+         */
+        types?: Array<string>;
+        /**
+         * Changes per page, 1 to 500 (default 100)
+         */
+        limit?: number;
+    };
+    url: '/v1/changes';
+};
+
+export type ListChangesErrors = {
+    /**
+     * Bad Request
+     */
+    400: ErrorResponse;
+    /**
+     * Unauthorized
+     */
+    401: ErrorResponse;
+    /**
+     * Forbidden
+     */
+    403: ErrorResponse;
+    /**
+     * Gone
+     */
+    410: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
+};
+
+export type ListChangesError = ListChangesErrors[keyof ListChangesErrors];
+
+export type ListChangesResponses = {
+    /**
+     * OK
+     */
+    200: ChangesResponseEnvelope;
+};
+
+export type ListChangesResponse = ListChangesResponses[keyof ListChangesResponses];
 
 export type ListEventsData = {
     body?: never;
@@ -3523,6 +3851,10 @@ export type ListEventsErrors = {
      * Forbidden
      */
     403: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
 };
 
 export type ListEventsError = ListEventsErrors[keyof ListEventsErrors];
@@ -3563,6 +3895,10 @@ export type GetEventErrors = {
      * Not Found
      */
     404: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
 };
 
 export type GetEventError = GetEventErrors[keyof GetEventErrors];
@@ -3588,6 +3924,10 @@ export type ListMySpacesErrors = {
      * Unauthorized
      */
     401: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
 };
 
 export type ListMySpacesError = ListMySpacesErrors[keyof ListMySpacesErrors];
@@ -3628,6 +3968,10 @@ export type ListRecurringTransactionsErrors = {
      */
     403: ErrorResponse;
     /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
+    /**
      * Internal Server Error
      */
     500: ErrorResponse;
@@ -3651,6 +3995,10 @@ export type ListRecurringOccurrencesData = {
          * The space to act in. A token bound to one space may leave it out.
          */
         'X-Space-ID'?: string;
+        /**
+         * The currency to show converted amounts and totals in (ISO 4217, for example EUR). Without it they are in your account's main currency; a query parameter that names the currency (currency, currencyCode or base) wins over it.
+         */
+        'X-Display-Currency'?: string;
     };
     path?: never;
     query?: {
@@ -3683,6 +4031,10 @@ export type ListRecurringOccurrencesErrors = {
      * Forbidden
      */
     403: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
     /**
      * Internal Server Error
      */
@@ -3735,6 +4087,10 @@ export type GetRecurringTransactionErrors = {
      * Not Found
      */
     404: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
 };
 
 export type GetRecurringTransactionError = GetRecurringTransactionErrors[keyof GetRecurringTransactionErrors];
@@ -3770,6 +4126,10 @@ export type ListSourcesErrors = {
      * Forbidden
      */
     403: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
 };
 
 export type ListSourcesError = ListSourcesErrors[keyof ListSourcesErrors];
@@ -3812,6 +4172,10 @@ export type CreateSourceErrors = {
      * Forbidden
      */
     403: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
 };
 
 export type CreateSourceError = CreateSourceErrors[keyof CreateSourceErrors];
@@ -3852,6 +4216,10 @@ export type DeleteSourceErrors = {
      * Not Found
      */
     404: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
 };
 
 export type DeleteSourceError = DeleteSourceErrors[keyof DeleteSourceErrors];
@@ -3892,6 +4260,10 @@ export type GetSourceErrors = {
      * Not Found
      */
     404: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
 };
 
 export type GetSourceError = GetSourceErrors[keyof GetSourceErrors];
@@ -3935,6 +4307,10 @@ export type UpdateSourceErrors = {
      * Not Found
      */
     404: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
 };
 
 export type UpdateSourceError = UpdateSourceErrors[keyof UpdateSourceErrors];
@@ -3986,6 +4362,10 @@ export type UpsertSourceAccountErrors = {
      * Conflict
      */
     409: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
 };
 
 export type UpsertSourceAccountError = UpsertSourceAccountErrors[keyof UpsertSourceAccountErrors];
@@ -4041,6 +4421,10 @@ export type PushSourceBalancesErrors = {
      * Request Entity Too Large
      */
     413: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
 };
 
 export type PushSourceBalancesError = PushSourceBalancesErrors[keyof PushSourceBalancesErrors];
@@ -4102,6 +4486,10 @@ export type ListSourceTransactionsErrors = {
      * Not Found
      */
     404: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
 };
 
 export type ListSourceTransactionsError = ListSourceTransactionsErrors[keyof ListSourceTransactionsErrors];
@@ -4161,6 +4549,10 @@ export type PushSourceTransactionsErrors = {
      * Unprocessable Entity
      */
     422: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
 };
 
 export type PushSourceTransactionsError = PushSourceTransactionsErrors[keyof PushSourceTransactionsErrors];
@@ -4209,6 +4601,10 @@ export type DeleteSourceTransactionErrors = {
      * Conflict
      */
     409: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
 };
 
 export type DeleteSourceTransactionError = DeleteSourceTransactionErrors[keyof DeleteSourceTransactionErrors];
@@ -4229,6 +4625,10 @@ export type ListTransactionsData = {
          * The space to act in. A token bound to one space may leave it out.
          */
         'X-Space-ID'?: string;
+        /**
+         * The currency to show converted amounts and totals in (ISO 4217, for example EUR). Without it they are in your account's main currency; a query parameter that names the currency (currency, currencyCode or base) wins over it.
+         */
+        'X-Display-Currency'?: string;
     };
     path?: never;
     query?: {
@@ -4325,6 +4725,22 @@ export type ListTransactionsData = {
          */
         import_id?: string;
         /**
+         * Only the rows at this place of the space
+         */
+        place_id?: string;
+        /**
+         * Only the rows in this city
+         */
+        city?: string;
+        /**
+         * Only the rows in this country
+         */
+        country?: string;
+        /**
+         * Only the purchases made online (true) or not online (false)
+         */
+        online?: boolean;
+        /**
          * Currency code for converted amounts
          */
         currencyCode?: string;
@@ -4333,7 +4749,7 @@ export type ListTransactionsData = {
          */
         updated_since?: string;
         /**
-         * Order: date_desc (default, newest first), date_asc, amount_desc, amount_asc (amount in the account currency, unsigned), updated_asc (oldest change first)
+         * Order: date_desc (default, newest first), date_asc, amount_desc, amount_asc (amount in the display currency at the latest rates, unsigned; a row without a rate last), updated_asc (oldest change first)
          */
         sort?: 'date_desc' | 'date_asc' | 'amount_desc' | 'amount_asc' | 'updated_asc';
         /**
@@ -4374,6 +4790,10 @@ export type ListTransactionsErrors = {
      */
     403: ErrorResponse;
     /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
+    /**
      * Internal Server Error
      */
     500: ErrorResponse;
@@ -4404,6 +4824,10 @@ export type CreateTransactionData = {
          * Makes a retry safe: the same key with the same request within 24 hours returns the first answer (header Idempotent-Replayed: true) instead of creating again; VAL_086 for the key with another request, VAL_087 while the first still runs
          */
         'Idempotency-Key'?: string;
+        /**
+         * The currency to show converted amounts and totals in (ISO 4217, for example EUR). Without it they are in your account's main currency; a query parameter that names the currency (currency, currencyCode or base) wins over it.
+         */
+        'X-Display-Currency'?: string;
     };
     path?: never;
     query?: never;
@@ -4427,6 +4851,10 @@ export type CreateTransactionErrors = {
      * Unprocessable Entity
      */
     422: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
 };
 
 export type CreateTransactionError = CreateTransactionErrors[keyof CreateTransactionErrors];
@@ -4451,6 +4879,10 @@ export type GetTransactionDayTotalsData = {
          * The space to act in. A token bound to one space may leave it out.
          */
         'X-Space-ID'?: string;
+        /**
+         * The currency to show converted amounts and totals in (ISO 4217, for example EUR). Without it they are in your account's main currency; a query parameter that names the currency (currency, currencyCode or base) wins over it.
+         */
+        'X-Display-Currency'?: string;
     };
     path?: never;
     query?: {
@@ -4548,6 +4980,10 @@ export type GetTransactionDayTotalsErrors = {
      */
     403: ErrorResponse;
     /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
+    /**
      * Internal Server Error
      */
     500: ErrorResponse;
@@ -4599,6 +5035,10 @@ export type DeleteTransactionErrors = {
      * Precondition Failed
      */
     412: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
 };
 
 export type DeleteTransactionError = DeleteTransactionErrors[keyof DeleteTransactionErrors];
@@ -4619,6 +5059,10 @@ export type GetTransactionData = {
          * The space to act in. A token bound to one space may leave it out.
          */
         'X-Space-ID'?: string;
+        /**
+         * The currency to show converted amounts and totals in (ISO 4217, for example EUR). Without it they are in your account's main currency; a query parameter that names the currency (currency, currencyCode or base) wins over it.
+         */
+        'X-Display-Currency'?: string;
     };
     path: {
         /**
@@ -4635,6 +5079,10 @@ export type GetTransactionErrors = {
      * Not Found
      */
     404: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
 };
 
 export type GetTransactionError = GetTransactionErrors[keyof GetTransactionErrors];
@@ -4662,6 +5110,10 @@ export type UpdateTransactionData = {
          * Expected row version (the ETag), e.g. \
          */
         'If-Match'?: string;
+        /**
+         * The currency to show converted amounts and totals in (ISO 4217, for example EUR). Without it they are in your account's main currency; a query parameter that names the currency (currency, currencyCode or base) wins over it.
+         */
+        'X-Display-Currency'?: string;
     };
     path: {
         /**
@@ -4694,6 +5146,10 @@ export type UpdateTransactionErrors = {
      * Unprocessable Entity
      */
     422: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
 };
 
 export type UpdateTransactionError = UpdateTransactionErrors[keyof UpdateTransactionErrors];

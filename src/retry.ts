@@ -35,9 +35,29 @@ export function retryDelayMs(attempt: number, response: Response | undefined, ra
 
 const defaultSleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms))
 
+/** Set on the 204 that stands in for a retried DELETE's 404. */
+export const RETRIED_DELETE_HEADER = "X-Degroshi-Retried-Delete"
+
+/**
+ * A DELETE sent again after a lost answer (a dropped connection, a timeout, a 5xx) finds nothing left to delete when
+ * the first try already did it. That 404 is the success it stands for: an empty 204 marked with RETRIED_DELETE_HEADER.
+ */
+function isRetriedDeleteGone(request: Request, attempt: number, response: Response): boolean {
+  return attempt > 0 && request.method.toUpperCase() === "DELETE" && response.status === 404
+}
+
+function deletedResponse(response: Response): Response {
+  const headers = new Headers(response.headers)
+  headers.delete("content-type")
+  headers.delete("content-length")
+  headers.set(RETRIED_DELETE_HEADER, "true")
+  return new Response(null, { status: 204, headers })
+}
+
 /**
  * Wraps fetch with a timeout per try and retries: network failures, 408, 429 and 5xx, only for requests that are
- * safe to send again (isRetrySafe). Each try sends a fresh clone of the request, so bodies survive.
+ * safe to send again (isRetrySafe). Each try sends a fresh clone of the request, so bodies survive. A retried DELETE
+ * that finds nothing (404) answers 204: the earlier try deleted it.
  */
 export function retryingFetch(baseFetch: FetchFn, options: RetryOptions): FetchFn {
   const sleep = options.sleep ?? defaultSleep
@@ -53,6 +73,10 @@ export function retryingFetch(baseFetch: FetchFn, options: RetryOptions): FetchF
       } catch (error) {
         if (original.signal.aborted) throw error
         if (attempt >= retries) throw timeout.aborted ? new ApiTimeoutError(error) : new ApiConnectionError(error)
+      }
+      if (response && isRetriedDeleteGone(original, attempt, response)) {
+        await response.body?.cancel()
+        return deletedResponse(response)
       }
       if (response && (!RETRIED_STATUSES.has(response.status) || attempt >= retries)) return response
       await response?.body?.cancel()
