@@ -165,6 +165,10 @@ export type AccountListResponse = {
     id: string;
     include_in_net_worth: boolean;
     /**
+     * The loan's instalment plan: its active plan, else its latest; null for an account that never had one. Clients tell an instalment plan's loan apart by it.
+     */
+    instalment_plan_id?: string | null;
+    /**
      * When a deposit pays its interest: monthly, quarterly, at_maturity (with the deposit) or capitalized (added to it).
      */
     interest_payout?: 'monthly' | 'quarterly' | 'at_maturity' | 'capitalized' | null;
@@ -294,6 +298,10 @@ export type AccountResponse = {
     icon?: string | null;
     id: string;
     include_in_net_worth: boolean;
+    /**
+     * The loan's instalment plan: its active plan, else its latest; null for an account that never had one. Clients tell an instalment plan's loan apart by it.
+     */
+    instalment_plan_id?: string | null;
     /**
      * When a deposit pays its interest: monthly, quarterly, at_maturity (with the deposit) or capitalized (added to it).
      */
@@ -448,6 +456,10 @@ export type AccountWithConvertedBalance = {
     icon?: string | null;
     id: string;
     include_in_net_worth: boolean;
+    /**
+     * The loan's instalment plan: its active plan, else its latest; null for an account that never had one. Clients tell an instalment plan's loan apart by it.
+     */
+    instalment_plan_id?: string | null;
     /**
      * When a deposit pays its interest: monthly, quarterly, at_maturity (with the deposit) or capitalized (added to it).
      */
@@ -1250,6 +1262,11 @@ export type DateRange = {
     to: string;
 };
 
+export type DayChangeResponse = {
+    day: number;
+    from: string;
+};
+
 export type DayTotal = {
     /**
      * How many rows the list shows that day for the same filters (transfers and cancelled rows included, as the table shows them).
@@ -1792,6 +1809,10 @@ export type Mode = 'post' | 'track_only' | 'confirm';
 export type MySpaceResponse = {
     id: string;
     is_default: boolean;
+    /**
+     * `is_sandbox` marks the developer sandbox, the space a dg_test_ key reaches.
+     */
+    is_sandbox: boolean;
     kind: 'personal' | 'business';
     name: string;
     role: 'owner' | 'admin' | 'member' | 'viewer' | 'accountant';
@@ -2237,6 +2258,10 @@ export type RecurringResponse = {
      * The creator's first name (else the local part of their email), also for members who have left the space; omitted with created_by.
      */
     created_by_name?: string | null;
+    /**
+     * The days a monthly rule's occurrences moved to, oldest first. From each change's `from` on, occurrences fall on its `day`, a short month taking its last day; before it, on the day they had. Omitted while the rule keeps its start date's day.
+     */
+    day_changes?: Array<DayChangeResponse> | null;
     description: string;
     end_date?: string | null;
     frequency: Frequency;
@@ -2328,6 +2353,31 @@ export type ResendRangeResponseEnvelope = {
 
 export type RotateSecretRequest = {
     overlap_hours?: 0 | 1 | 24 | 72;
+};
+
+export type SandboxResponse = {
+    name: string;
+    /**
+     * `resets_left_today` counts the resets left in the last 24 hours (at most 20).
+     */
+    resets_left_today: number;
+    /**
+     * `seed_version` names the demo data's contents; it changes when the seed does.
+     */
+    seed_version: number;
+    /**
+     * The last seed: the sandbox's creation or its last reset.
+     */
+    seeded_at: string;
+    space_id: string;
+};
+
+export type SandboxResponseEnvelope = {
+    data: SandboxResponse;
+    /**
+     * Always true
+     */
+    success: boolean;
 };
 
 export type SecretResponse = {
@@ -4482,6 +4532,35 @@ export type GetRecurringTransactionResponses = {
 };
 
 export type GetRecurringTransactionResponse = GetRecurringTransactionResponses[keyof GetRecurringTransactionResponses];
+
+export type ResetSandboxData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/v1/sandbox/reset';
+};
+
+export type ResetSandboxErrors = {
+    /**
+     * Forbidden
+     */
+    403: ErrorResponse;
+    /**
+     * Too Many Requests
+     */
+    429: ErrorResponse;
+};
+
+export type ResetSandboxError = ResetSandboxErrors[keyof ResetSandboxErrors];
+
+export type ResetSandboxResponses = {
+    /**
+     * OK
+     */
+    200: SandboxResponseEnvelope;
+};
+
+export type ResetSandboxResponse = ResetSandboxResponses[keyof ResetSandboxResponses];
 
 export type ListSourcesData = {
     body?: never;

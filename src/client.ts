@@ -20,7 +20,10 @@ import {
 } from "./webhooks.js";
 
 export interface DegroshiOptions {
-  /** A personal access token (dg_pat_…), sent as X-API-Key. Default: the DEGROSHI_API_KEY environment variable. */
+  /**
+   * A personal access token (dg_pat_…) or a sandbox key (dg_test_…), sent as X-API-Key. Default: the DEGROSHI_API_KEY
+   * environment variable.
+   */
   apiKey?: string;
   /** The space to act in (X-Space-ID); optional for a token bound to one space. */
   spaceId?: string;
@@ -422,6 +425,17 @@ export class Degroshi {
       new ChangeFeed(
         (cursor) => this.changes.list({ ...query, cursor }),
         query.cursor,
+      ),
+  };
+
+  /**
+   * The developer sandbox, with a sandbox key (`dg_test_`): `reset()` puts it back to its demo data, so a test run
+   * starts clean (20 a day).
+   */
+  readonly sandbox = {
+    reset: () =>
+      this.one<DataOf<T.SandboxResponseEnvelope>>(
+        api.resetSandbox({ client: this.client }),
       ),
   };
 
