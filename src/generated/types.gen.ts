@@ -5111,6 +5111,10 @@ export type ListTransactionsData = {
          */
         category_id?: string;
         /**
+         * One merchant's rows, by the key analytics and Suricate's marks give it: p:<brand id> or n:<text>
+         */
+        merchant_key?: string;
+        /**
          * Categories (any of them, together with category_id): repeat the parameter or send comma separated ids
          */
         category_ids?: Array<string>;
@@ -5356,6 +5360,10 @@ export type GetTransactionDayTotalsData = {
          * Filter by category ID
          */
         category_id?: string;
+        /**
+         * One merchant's rows, by the key analytics and Suricate's marks give it: p:<brand id> or n:<text>
+         */
+        merchant_key?: string;
         /**
          * Categories (any of them, together with category_id): repeat the parameter or send comma separated ids
          */
