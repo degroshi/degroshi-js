@@ -2,7 +2,7 @@
 
 import { client } from './client.gen.js';
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client/index.js';
-import type { CreateSourceData, CreateSourceErrors, CreateSourceResponses, CreateTransactionData, CreateTransactionErrors, CreateTransactionResponses, DeleteSourceData, DeleteSourceErrors, DeleteSourceResponses, DeleteSourceTransactionData, DeleteSourceTransactionErrors, DeleteSourceTransactionResponses, DeleteTransactionData, DeleteTransactionErrors, DeleteTransactionResponses, GetAccountData, GetAccountErrors, GetAccountResponses, GetAccountsNetWorthData, GetAccountsNetWorthErrors, GetAccountsNetWorthResponses, GetAnalyticsCashFlowData, GetAnalyticsCashFlowErrors, GetAnalyticsCashFlowResponses, GetAnalyticsCategoriesData, GetAnalyticsCategoriesErrors, GetAnalyticsCategoriesResponses, GetAnalyticsMerchantsData, GetAnalyticsMerchantsErrors, GetAnalyticsMerchantsResponses, GetAnalyticsNetWorthData, GetAnalyticsNetWorthErrors, GetAnalyticsNetWorthResponses, GetAnalyticsSpendingData, GetAnalyticsSpendingErrors, GetAnalyticsSpendingResponses, GetAnalyticsSummaryData, GetAnalyticsSummaryErrors, GetAnalyticsSummaryResponses, GetAnalyticsTrendsData, GetAnalyticsTrendsErrors, GetAnalyticsTrendsResponses, GetBudgetData, GetBudgetErrors, GetBudgetResponses, GetCategoryData, GetCategoryErrors, GetCategoryResponses, GetEventData, GetEventErrors, GetEventResponses, GetRecurringTransactionData, GetRecurringTransactionErrors, GetRecurringTransactionResponses, GetSourceData, GetSourceErrors, GetSourceResponses, GetTransactionData, GetTransactionDayTotalsData, GetTransactionDayTotalsErrors, GetTransactionDayTotalsResponses, GetTransactionErrors, GetTransactionResponses, ListAccountsData, ListAccountsErrors, ListAccountsResponses, ListBudgetsData, ListBudgetsErrors, ListBudgetsResponses, ListCategoriesData, ListCategoriesErrors, ListCategoriesResponses, ListChangesData, ListChangesErrors, ListChangesResponses, ListEventsData, ListEventsErrors, ListEventsResponses, ListMySpacesData, ListMySpacesErrors, ListMySpacesResponses, ListRecurringOccurrencesData, ListRecurringOccurrencesErrors, ListRecurringOccurrencesResponses, ListRecurringTransactionsData, ListRecurringTransactionsErrors, ListRecurringTransactionsResponses, ListSourcesData, ListSourcesErrors, ListSourcesResponses, ListSourceTransactionsData, ListSourceTransactionsErrors, ListSourceTransactionsResponses, ListTransactionsData, ListTransactionsErrors, ListTransactionsResponses, PushSourceBalancesData, PushSourceBalancesErrors, PushSourceBalancesResponses, PushSourceTransactionsData, PushSourceTransactionsErrors, PushSourceTransactionsResponses, UpdateSourceData, UpdateSourceErrors, UpdateSourceResponses, UpdateTransactionData, UpdateTransactionErrors, UpdateTransactionResponses, UpsertSourceAccountData, UpsertSourceAccountErrors, UpsertSourceAccountResponses } from './types.gen.js';
+import type { CreateSourceData, CreateSourceErrors, CreateSourceResponses, CreateTransactionData, CreateTransactionErrors, CreateTransactionResponses, CreateWebhookData, CreateWebhookErrors, CreateWebhookResponses, DeleteSourceData, DeleteSourceErrors, DeleteSourceResponses, DeleteSourceTransactionData, DeleteSourceTransactionErrors, DeleteSourceTransactionResponses, DeleteTransactionData, DeleteTransactionErrors, DeleteTransactionResponses, DeleteWebhookData, DeleteWebhookErrors, DeleteWebhookResponses, GetAccountData, GetAccountErrors, GetAccountResponses, GetAccountsNetWorthData, GetAccountsNetWorthErrors, GetAccountsNetWorthResponses, GetAnalyticsCashFlowData, GetAnalyticsCashFlowErrors, GetAnalyticsCashFlowResponses, GetAnalyticsCategoriesData, GetAnalyticsCategoriesErrors, GetAnalyticsCategoriesResponses, GetAnalyticsMerchantsData, GetAnalyticsMerchantsErrors, GetAnalyticsMerchantsResponses, GetAnalyticsNetWorthData, GetAnalyticsNetWorthErrors, GetAnalyticsNetWorthResponses, GetAnalyticsSpendingData, GetAnalyticsSpendingErrors, GetAnalyticsSpendingResponses, GetAnalyticsSummaryData, GetAnalyticsSummaryErrors, GetAnalyticsSummaryResponses, GetAnalyticsTrendsData, GetAnalyticsTrendsErrors, GetAnalyticsTrendsResponses, GetBudgetData, GetBudgetErrors, GetBudgetResponses, GetCategoryData, GetCategoryErrors, GetCategoryResponses, GetEventData, GetEventErrors, GetEventResponses, GetRecurringTransactionData, GetRecurringTransactionErrors, GetRecurringTransactionResponses, GetSourceData, GetSourceErrors, GetSourceResponses, GetTransactionData, GetTransactionDayTotalsData, GetTransactionDayTotalsErrors, GetTransactionDayTotalsResponses, GetTransactionErrors, GetTransactionResponses, GetWebhookData, GetWebhookDeliveryData, GetWebhookDeliveryErrors, GetWebhookDeliveryResponses, GetWebhookErrors, GetWebhookResponses, GetWebhookStatsData, GetWebhookStatsErrors, GetWebhookStatsResponses, ListAccountsData, ListAccountsErrors, ListAccountsResponses, ListBudgetsData, ListBudgetsErrors, ListBudgetsResponses, ListCategoriesData, ListCategoriesErrors, ListCategoriesResponses, ListChangesData, ListChangesErrors, ListChangesResponses, ListEventsData, ListEventsErrors, ListEventsResponses, ListMySpacesData, ListMySpacesErrors, ListMySpacesResponses, ListRecurringOccurrencesData, ListRecurringOccurrencesErrors, ListRecurringOccurrencesResponses, ListRecurringTransactionsData, ListRecurringTransactionsErrors, ListRecurringTransactionsResponses, ListSourcesData, ListSourcesErrors, ListSourcesResponses, ListSourceTransactionsData, ListSourceTransactionsErrors, ListSourceTransactionsResponses, ListTransactionsData, ListTransactionsErrors, ListTransactionsResponses, ListWebhookDeliveriesData, ListWebhookDeliveriesErrors, ListWebhookDeliveriesResponses, ListWebhookEventTypesData, ListWebhookEventTypesErrors, ListWebhookEventTypesResponses, ListWebhooksData, ListWebhooksErrors, ListWebhooksResponses, PauseWebhookData, PauseWebhookErrors, PauseWebhookResponses, PushSourceBalancesData, PushSourceBalancesErrors, PushSourceBalancesResponses, PushSourceTransactionsData, PushSourceTransactionsErrors, PushSourceTransactionsResponses, ResendWebhookDeliveriesData, ResendWebhookDeliveriesErrors, ResendWebhookDeliveriesResponses, ResendWebhookDeliveryData, ResendWebhookDeliveryErrors, ResendWebhookDeliveryResponses, ResumeWebhookData, ResumeWebhookErrors, ResumeWebhookResponses, RotateWebhookSecretData, RotateWebhookSecretErrors, RotateWebhookSecretResponses, SendWebhookTestData, SendWebhookTestErrors, SendWebhookTestResponses, UpdateSourceData, UpdateSourceErrors, UpdateSourceResponses, UpdateTransactionData, UpdateTransactionErrors, UpdateTransactionResponses, UpdateWebhookData, UpdateWebhookErrors, UpdateWebhookResponses, UpsertSourceAccountData, UpsertSourceAccountErrors, UpsertSourceAccountResponses } from './types.gen.js';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -448,6 +448,191 @@ export const getTransaction = <ThrowOnError extends boolean = false>(options: Op
 export const updateTransaction = <ThrowOnError extends boolean = false>(options: Options<UpdateTransactionData, ThrowOnError>): RequestResult<UpdateTransactionResponses, UpdateTransactionErrors, ThrowOnError> => (options.client ?? client).patch<UpdateTransactionResponses, UpdateTransactionErrors, ThrowOnError>({
     security: [{ name: 'X-API-Key', type: 'apiKey' }],
     url: '/v1/transactions/{id}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * List webhook endpoints
+ *
+ * The webhook endpoints this token manages: those of the request's space alone whose every event type the token's scopes read. An endpoint set up in the app for several spaces, or with types the token can't read, isn't listed. Each comes with its health: deliveries and successes in the last 24 hours and 7 days (test events left out), p95 latency and the last delivery. The signing secret is never included.
+ */
+export const listWebhooks = <ThrowOnError extends boolean = false>(options?: Options<ListWebhooksData, ThrowOnError>): RequestResult<ListWebhooksResponses, ListWebhooksErrors, ThrowOnError> => (options?.client ?? client).get<ListWebhooksResponses, ListWebhooksErrors, ThrowOnError>({
+    security: [{ name: 'X-API-Key', type: 'apiKey' }],
+    url: '/v1/webhooks',
+    ...options
+});
+
+/**
+ * Create webhook endpoint
+ *
+ * An endpoint for the request's space: an HTTPS `url` on a public address (400 `WHK_031` with `details.reason`), the `events` to send (400 `WHK_005` for an unknown type) and an optional `description`. Leave `space_ids` out: it may name only the request's space (403 `WHK_009`). Each event type needs the scope that reads its data, `transactions:read` for `transaction.*` for example (403 `AUTH_007` with `details.required_scope`). The answer carries the signing secret (`dg_whsec_…`): keep it, a token can't read it back, only rotate it. A plan caps the number of endpoints (403 `BILL_013`).
+ */
+export const createWebhook = <ThrowOnError extends boolean = false>(options: Options<CreateWebhookData, ThrowOnError>): RequestResult<CreateWebhookResponses, CreateWebhookErrors, ThrowOnError> => (options.client ?? client).post<CreateWebhookResponses, CreateWebhookErrors, ThrowOnError>({
+    security: [{ name: 'X-API-Key', type: 'apiKey' }],
+    url: '/v1/webhooks',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * List webhook event types
+ *
+ * The event types a webhook endpoint can take, each with its group and a made-up sample of its data. The same for every space, so no `X-Space-ID` is needed.
+ */
+export const listWebhookEventTypes = <ThrowOnError extends boolean = false>(options?: Options<ListWebhookEventTypesData, ThrowOnError>): RequestResult<ListWebhookEventTypesResponses, ListWebhookEventTypesErrors, ThrowOnError> => (options?.client ?? client).get<ListWebhookEventTypesResponses, ListWebhookEventTypesErrors, ThrowOnError>({
+    security: [{ name: 'X-API-Key', type: 'apiKey' }],
+    url: '/v1/webhooks/event-types',
+    ...options
+});
+
+/**
+ * Delete webhook endpoint
+ *
+ * Removes the endpoint and its delivery log; nothing more is sent to it.
+ */
+export const deleteWebhook = <ThrowOnError extends boolean = false>(options: Options<DeleteWebhookData, ThrowOnError>): RequestResult<DeleteWebhookResponses, DeleteWebhookErrors, ThrowOnError> => (options.client ?? client).delete<DeleteWebhookResponses, DeleteWebhookErrors, ThrowOnError>({
+    security: [{ name: 'X-API-Key', type: 'apiKey' }],
+    url: '/v1/webhooks/{id}',
+    ...options
+});
+
+/**
+ * Get webhook endpoint
+ *
+ * One endpoint this token manages, with its health; 404 `WHK_001` for any other.
+ */
+export const getWebhook = <ThrowOnError extends boolean = false>(options: Options<GetWebhookData, ThrowOnError>): RequestResult<GetWebhookResponses, GetWebhookErrors, ThrowOnError> => (options.client ?? client).get<GetWebhookResponses, GetWebhookErrors, ThrowOnError>({
+    security: [{ name: 'X-API-Key', type: 'apiKey' }],
+    url: '/v1/webhooks/{id}',
+    ...options
+});
+
+/**
+ * Update webhook endpoint
+ *
+ * Changes the `url`, `description` or `events`; an absent field keeps its value. The same rules as creating one: the endpoint stays in the request's space, and each event type needs its read scope.
+ */
+export const updateWebhook = <ThrowOnError extends boolean = false>(options: Options<UpdateWebhookData, ThrowOnError>): RequestResult<UpdateWebhookResponses, UpdateWebhookErrors, ThrowOnError> => (options.client ?? client).patch<UpdateWebhookResponses, UpdateWebhookErrors, ThrowOnError>({
+    security: [{ name: 'X-API-Key', type: 'apiKey' }],
+    url: '/v1/webhooks/{id}',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * List webhook deliveries
+ *
+ * The endpoint's log of the last 30 days, newest first: each event's delivery with its status, attempts, last HTTP status and latency. Filter by `type`, `status`, `from` and `to`; page with `meta.next_cursor`.
+ */
+export const listWebhookDeliveries = <ThrowOnError extends boolean = false>(options: Options<ListWebhookDeliveriesData, ThrowOnError>): RequestResult<ListWebhookDeliveriesResponses, ListWebhookDeliveriesErrors, ThrowOnError> => (options.client ?? client).get<ListWebhookDeliveriesResponses, ListWebhookDeliveriesErrors, ThrowOnError>({
+    security: [{ name: 'X-API-Key', type: 'apiKey' }],
+    url: '/v1/webhooks/{id}/deliveries',
+    ...options
+});
+
+/**
+ * Get webhook delivery
+ *
+ * One delivery: what was sent (the URL, the headers with the signature, the JSON body) and every attempt with its status, duration, and the answer's first 20 headers and first 4 KB.
+ */
+export const getWebhookDelivery = <ThrowOnError extends boolean = false>(options: Options<GetWebhookDeliveryData, ThrowOnError>): RequestResult<GetWebhookDeliveryResponses, GetWebhookDeliveryErrors, ThrowOnError> => (options.client ?? client).get<GetWebhookDeliveryResponses, GetWebhookDeliveryErrors, ThrowOnError>({
+    security: [{ name: 'X-API-Key', type: 'apiKey' }],
+    url: '/v1/webhooks/{id}/deliveries/{delivery_id}',
+    ...options
+});
+
+/**
+ * Resend webhook delivery
+ *
+ * The same event id and body, a new attempt now. 409 `WHK_003` when the endpoint is disabled.
+ */
+export const resendWebhookDelivery = <ThrowOnError extends boolean = false>(options: Options<ResendWebhookDeliveryData, ThrowOnError>): RequestResult<ResendWebhookDeliveryResponses, ResendWebhookDeliveryErrors, ThrowOnError> => (options.client ?? client).post<ResendWebhookDeliveryResponses, ResendWebhookDeliveryErrors, ThrowOnError>({
+    security: [{ name: 'X-API-Key', type: 'apiKey' }],
+    url: '/v1/webhooks/{id}/deliveries/{delivery_id}/resend',
+    ...options
+});
+
+/**
+ * Pause webhook endpoint
+ *
+ * Holds the endpoint's deliveries: they wait up to 3 days, then are skipped. 409 `WHK_003` when the endpoint is disabled.
+ */
+export const pauseWebhook = <ThrowOnError extends boolean = false>(options: Options<PauseWebhookData, ThrowOnError>): RequestResult<PauseWebhookResponses, PauseWebhookErrors, ThrowOnError> => (options.client ?? client).post<PauseWebhookResponses, PauseWebhookErrors, ThrowOnError>({
+    security: [{ name: 'X-API-Key', type: 'apiKey' }],
+    url: '/v1/webhooks/{id}/pause',
+    ...options
+});
+
+/**
+ * Resend webhook deliveries in a range
+ *
+ * Sends again the endpoint's failed and skipped deliveries made between `from` and `to`, after an outage: at most 30 days and 10 000 deliveries (400 `WHK_006`).
+ */
+export const resendWebhookDeliveries = <ThrowOnError extends boolean = false>(options: Options<ResendWebhookDeliveriesData, ThrowOnError>): RequestResult<ResendWebhookDeliveriesResponses, ResendWebhookDeliveriesErrors, ThrowOnError> => (options.client ?? client).post<ResendWebhookDeliveriesResponses, ResendWebhookDeliveriesErrors, ThrowOnError>({
+    security: [{ name: 'X-API-Key', type: 'apiKey' }],
+    url: '/v1/webhooks/{id}/resend',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Resume webhook endpoint
+ *
+ * Turns a paused or disabled endpoint back on. A disabled endpoint's skipped deliveries can then be sent again with `POST /v1/webhooks/{id}/resend`.
+ */
+export const resumeWebhook = <ThrowOnError extends boolean = false>(options: Options<ResumeWebhookData, ThrowOnError>): RequestResult<ResumeWebhookResponses, ResumeWebhookErrors, ThrowOnError> => (options.client ?? client).post<ResumeWebhookResponses, ResumeWebhookErrors, ThrowOnError>({
+    security: [{ name: 'X-API-Key', type: 'apiKey' }],
+    url: '/v1/webhooks/{id}/resume',
+    ...options
+});
+
+/**
+ * Rotate webhook secret
+ *
+ * Makes a new signing secret at once and returns it. The old one keeps signing for `overlap_hours` (0, 1, 24 or 72), so both signatures appear in `Degroshi-Signature` until then and a receiver can switch without missing events.
+ */
+export const rotateWebhookSecret = <ThrowOnError extends boolean = false>(options: Options<RotateWebhookSecretData, ThrowOnError>): RequestResult<RotateWebhookSecretResponses, RotateWebhookSecretErrors, ThrowOnError> => (options.client ?? client).post<RotateWebhookSecretResponses, RotateWebhookSecretErrors, ThrowOnError>({
+    security: [{ name: 'X-API-Key', type: 'apiKey' }],
+    url: '/v1/webhooks/{id}/rotate-secret',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Get webhook endpoint stats
+ *
+ * Each day's deliveries (sent, delivered on the first call, after a retry, failed, still retrying) and the calls' response times (min, average, p95, max), test events left out, with the period's total. The last 7 days by default, at most 30.
+ */
+export const getWebhookStats = <ThrowOnError extends boolean = false>(options: Options<GetWebhookStatsData, ThrowOnError>): RequestResult<GetWebhookStatsResponses, GetWebhookStatsErrors, ThrowOnError> => (options.client ?? client).get<GetWebhookStatsResponses, GetWebhookStatsErrors, ThrowOnError>({
+    security: [{ name: 'X-API-Key', type: 'apiKey' }],
+    url: '/v1/webhooks/{id}/stats',
+    ...options
+});
+
+/**
+ * Send test webhook event
+ *
+ * A made-up event of `type` (`webhook.test` when empty), marked `test: true`, sent to this endpoint only and listed in its log, never counted in its health. An endpoint takes 10 test events a minute (429 `WHK_030` with `details.retry_after`). The delivery's detail shows the request sent and the endpoint's answer.
+ */
+export const sendWebhookTest = <ThrowOnError extends boolean = false>(options: Options<SendWebhookTestData, ThrowOnError>): RequestResult<SendWebhookTestResponses, SendWebhookTestErrors, ThrowOnError> => (options.client ?? client).post<SendWebhookTestResponses, SendWebhookTestErrors, ThrowOnError>({
+    security: [{ name: 'X-API-Key', type: 'apiKey' }],
+    url: '/v1/webhooks/{id}/test',
     ...options,
     headers: {
         'Content-Type': 'application/json',

@@ -48,6 +48,10 @@ export type AccountBalanceUpdatedEvent = {
 };
 
 export type AccountBrand = {
+    /**
+     * Our swatch for a curated domain (a palette.account hex, as the suggestions give it): a provider's folder on the accounts page falls back to it as its tint. Absent for other domains.
+     */
+    color?: string | null;
     domain?: string | null;
     icon_url?: string | null;
     icon_url_dark?: string | null;
@@ -93,7 +97,7 @@ export type AccountListResponse = {
      */
     account_overdraft_limit?: string | null;
     /**
-     * Reserved; not returned yet. share_amount in the account's own currency, next to account_current_balance.
+     * The share_amount in the account's own currency, next to account_current_balance.
      */
     account_share_amount?: string | null;
     /**
@@ -109,6 +113,10 @@ export type AccountListResponse = {
      */
     balance_version?: number | null;
     brand?: AccountBrand | null;
+    /**
+     * The colour sampled from the brand's logo (#RRGGBB), for the mark's first paint; omitted until a client samples it.
+     */
+    brand_color?: string | null;
     /**
      * The bank's or service's site; Brand is its logo for the account mark, omitted without a domain.
      */
@@ -150,7 +158,7 @@ export type AccountListResponse = {
     gradient_type?: GradientType | null;
     grain_intensity: number;
     /**
-     * Reserved; not returned yet.
+     * Set on an account another person shared with the requester.
      */
     grant?: GrantInfo | null;
     icon?: string | null;
@@ -188,11 +196,11 @@ export type AccountListResponse = {
      */
     payment_due_day?: number | null;
     /**
-     * Reserved; not returned yet. Account sharing, “My part”: the part of current_balance that counts in this space's totals, in the same currency: the requester's capital on an account pooled with them, the balance less the grantees' capital on an account this space pools with others. Absent where the whole balance counts. Totals count include_in_net_worth ? (share_amount ?? current_balance) : 0, with the usual sign rules.
+     * Account sharing, “My part”: the part of current_balance that counts in this space's totals, in the same currency: the requester's capital on an account pooled with them, the balance less the grantees' capital on an account this space pools with others. Absent where the whole balance counts. Totals count include_in_net_worth ? (share_amount ?? current_balance) : 0, with the usual sign rules.
      */
     share_amount?: string | null;
     /**
-     * Reserved; not returned yet.
+     * `shared_with` lists the people an account of this space is shared with.
      */
     shared_with?: Array<SharedWith> | null;
     /**
@@ -240,6 +248,10 @@ export type AccountResponse = {
     balance_version?: number | null;
     brand?: AccountBrand | null;
     /**
+     * The colour sampled from the brand's logo (#RRGGBB), for the mark's first paint; omitted until a client samples it.
+     */
+    brand_color?: string | null;
+    /**
      * The bank's or service's site; Brand is its logo for the account mark, omitted without a domain.
      */
     brand_domain?: string | null;
@@ -276,7 +288,7 @@ export type AccountResponse = {
     gradient_type?: GradientType | null;
     grain_intensity: number;
     /**
-     * Reserved; not returned yet.
+     * Set on an account another person shared with the requester.
      */
     grant?: GrantInfo | null;
     icon?: string | null;
@@ -314,11 +326,11 @@ export type AccountResponse = {
      */
     payment_due_day?: number | null;
     /**
-     * Reserved; not returned yet. Account sharing, “My part”: the part of current_balance that counts in this space's totals, in the same currency: the requester's capital on an account pooled with them, the balance less the grantees' capital on an account this space pools with others. Absent where the whole balance counts. Totals count include_in_net_worth ? (share_amount ?? current_balance) : 0, with the usual sign rules.
+     * Account sharing, “My part”: the part of current_balance that counts in this space's totals, in the same currency: the requester's capital on an account pooled with them, the balance less the grantees' capital on an account this space pools with others. Absent where the whole balance counts. Totals count include_in_net_worth ? (share_amount ?? current_balance) : 0, with the usual sign rules.
      */
     share_amount?: string | null;
     /**
-     * Reserved; not returned yet.
+     * `shared_with` lists the people an account of this space is shared with.
      */
     shared_with?: Array<SharedWith> | null;
     /**
@@ -377,6 +389,10 @@ export type AccountWithConvertedBalance = {
     balance_version?: number | null;
     brand?: AccountBrand | null;
     /**
+     * The colour sampled from the brand's logo (#RRGGBB), for the mark's first paint; omitted until a client samples it.
+     */
+    brand_color?: string | null;
+    /**
      * The bank's or service's site; Brand is its logo for the account mark, omitted without a domain.
      */
     brand_domain?: string | null;
@@ -395,7 +411,7 @@ export type AccountWithConvertedBalance = {
     converted_balance: string;
     converted_currency: string;
     /**
-     * Reserved; not returned yet. share_amount converted (the capital itself at the rate); the totals count it in place of converted_balance when it is set.
+     * The share_amount converted (the capital itself at the rate); the totals count it in place of converted_balance when it is set.
      */
     converted_share_amount?: string | null;
     created_at: string;
@@ -426,7 +442,7 @@ export type AccountWithConvertedBalance = {
     gradient_type?: GradientType | null;
     grain_intensity: number;
     /**
-     * Reserved; not returned yet.
+     * Set on an account another person shared with the requester.
      */
     grant?: GrantInfo | null;
     icon?: string | null;
@@ -464,11 +480,11 @@ export type AccountWithConvertedBalance = {
      */
     payment_due_day?: number | null;
     /**
-     * Reserved; not returned yet. Account sharing, “My part”: the part of current_balance that counts in this space's totals, in the same currency: the requester's capital on an account pooled with them, the balance less the grantees' capital on an account this space pools with others. Absent where the whole balance counts. Totals count include_in_net_worth ? (share_amount ?? current_balance) : 0, with the usual sign rules.
+     * Account sharing, “My part”: the part of current_balance that counts in this space's totals, in the same currency: the requester's capital on an account pooled with them, the balance less the grantees' capital on an account this space pools with others. Absent where the whole balance counts. Totals count include_in_net_worth ? (share_amount ?? current_balance) : 0, with the usual sign rules.
      */
     share_amount?: string | null;
     /**
-     * Reserved; not returned yet.
+     * `shared_with` lists the people an account of this space is shared with.
      */
     shared_with?: Array<SharedWith> | null;
     /**
@@ -529,6 +545,24 @@ export type AnalyticsCurrencyInfo = {
     currencySymbol: string;
     decimalDigits: number;
     decimalPlaces: number;
+};
+
+export type AttemptResponse = {
+    duration_ms: number;
+    error?: string | null;
+    http_status?: number | null;
+    n: number;
+    /**
+     * The answer's first 4 KB.
+     */
+    response_body: string;
+    /**
+     * The answer's first 20 headers.
+     */
+    response_headers?: {
+        [key: string]: string;
+    } | null;
+    started_at: string;
 };
 
 export type BalanceBatchRequest = {
@@ -828,6 +862,22 @@ export type CashFlowResponseEnvelope = {
     success: boolean;
 };
 
+export type CatalogEntry = {
+    group: string;
+    sample?: {
+        [key: string]: unknown;
+    } | null;
+    type: string;
+};
+
+export type CatalogEntryListEnvelope = {
+    data: Array<CatalogEntry>;
+    /**
+     * Always true
+     */
+    success: boolean;
+};
+
 export type Category = {
     /**
      * `business_space_id` marks the subcategory of a business under “Income” in its owner's personal space: the owner's money from that business lands here. Renaming or moving it keeps the link.
@@ -1063,6 +1113,22 @@ export type ConnectionStatusChangedEvent = {
     type: 'connection.status_changed';
 };
 
+export type CreateEndpointRequest = {
+    description?: string;
+    /**
+     * The types to send (GET /v1/webhooks/event-types).
+     */
+    events: Array<string>;
+    /**
+     * The spaces whose events go to it; the person must be a member of each. With an API key it may be left out: the endpoint covers the request's space (X-Space-ID), the only one it may name.
+     */
+    space_ids?: Array<string>;
+    /**
+     * URL is where events go: HTTPS on a public address.
+     */
+    url: string;
+};
+
 export type CreatePlaceRequest = {
     /**
      * `city_ref` keeps a live pick's city under the person's Name; `provider_ref` is an Apple Place ID ("apple:…").
@@ -1163,12 +1229,32 @@ export type CreateTransactionRequest = {
     type: 'income' | 'expense' | 'transfer';
 };
 
+export type CreatedEndpointResponse = {
+    endpoint: EndpointResponse;
+    /**
+     * Secret signs every delivery (Degroshi-Signature). The app can show it again later; an API key can only rotate it.
+     */
+    secret: string;
+};
+
+export type CreatedEndpointResponseEnvelope = {
+    data: CreatedEndpointResponse;
+    /**
+     * Always true
+     */
+    success: boolean;
+};
+
 export type DateRange = {
     from: string;
     to: string;
 };
 
 export type DayTotal = {
+    /**
+     * How many rows the list shows that day for the same filters (transfers and cancelled rows included, as the table shows them).
+     */
+    count: number;
     day: string;
     /**
      * Decimal number encoded as a string (for example "1234.5600"); never a JSON number.
@@ -1186,11 +1272,15 @@ export type DayTotal = {
 
 export type DayTotalsResponse = {
     /**
+     * How many rows the list shows for the same filters: the sum of the days' counts.
+     */
+    count: number;
+    /**
      * The display currency the amounts are in.
      */
     currency: string;
     /**
-     * The days with any money, newest first.
+     * The days with any money or any row, newest first: a day of transfers alone has 0 and 0 and its count.
      */
     days?: Array<DayTotal> | null;
     /**
@@ -1222,6 +1312,154 @@ export type DeleteData = {
 
 export type DeleteDataEnvelope = {
     data: DeleteData;
+    /**
+     * Always true
+     */
+    success: boolean;
+};
+
+export type DeliveryCursorMeta = {
+    has_more: boolean;
+    /**
+     * `next_cursor` reads the next (older) page; absent on the last.
+     */
+    next_cursor?: string | null;
+};
+
+export type DeliveryDetail = {
+    attempt_log?: Array<AttemptResponse> | null;
+    delivery: DeliverySummary;
+    request: DeliveryRequest;
+};
+
+export type DeliveryDetailEnvelope = {
+    data: DeliveryDetail;
+    /**
+     * Always true
+     */
+    success: boolean;
+};
+
+export type DeliveryPage = {
+    data?: Array<DeliverySummary> | null;
+    meta: DeliveryCursorMeta;
+};
+
+export type DeliveryPageEnvelope = {
+    data: Array<DeliverySummary>;
+    meta: DeliveryCursorMeta;
+    /**
+     * Always true
+     */
+    success: boolean;
+};
+
+export type DeliveryRequest = {
+    body?: {
+        [key: string]: unknown;
+    } | null;
+    headers?: {
+        [key: string]: string;
+    } | null;
+    url: string;
+};
+
+export type DeliverySummary = {
+    /**
+     * Attempts counts the calls so far.
+     */
+    attempts: number;
+    created_at: string;
+    /**
+     * When a 2xx came back.
+     */
+    delivered_at?: string | null;
+    error?: string | null;
+    event_id: string;
+    /**
+     * HTTPStatus is the last answer's status; absent when the call got none (a timeout, DNS, TLS).
+     */
+    http_status?: number | null;
+    id: string;
+    latency_ms?: number | null;
+    /**
+     * When a pending delivery is tried again.
+     */
+    next_attempt_at?: string | null;
+    status: 'pending' | 'succeeded' | 'failed' | 'skipped';
+    /**
+     * Test marks a test event (POST /v1/webhooks/{id}/test).
+     */
+    test: boolean;
+    type: string;
+};
+
+export type DeliverySummaryEnvelope = {
+    data: DeliverySummary;
+    /**
+     * Always true
+     */
+    success: boolean;
+};
+
+export type EndpointHealth = {
+    /**
+     * The last 7 days in the person's zone, oldest first, for the list's sparklines.
+     */
+    days?: Array<HealthDay> | null;
+    /**
+     * The 95th percentile of the attempts' durations in the last 24 hours; absent without any.
+     */
+    p95_latency_ms_24h?: number | null;
+    /**
+     * Sent24h counts deliveries finished or still retrying in the last 24 hours; Succeeded24h those that got a 2xx.
+     */
+    sent_24h: number;
+    sent_7d: number;
+    succeeded_24h: number;
+    succeeded_7d: number;
+};
+
+export type EndpointResponse = {
+    /**
+     * APIVersion is the payload version the endpoint is pinned to.
+     */
+    api_version: string;
+    created_at: string;
+    description: string;
+    /**
+     * `disabled_reason` says why a disabled endpoint stopped: failing (no 2xx for 3 days) or owner_left (no space left).
+     */
+    disabled_reason?: 'failing' | 'owner_left' | null;
+    events?: Array<string> | null;
+    /**
+     * When the run of failures began; absent while healthy.
+     */
+    failing_since?: string | null;
+    health: EndpointHealth;
+    id: string;
+    last_delivery?: DeliverySummary | null;
+    last_success_at?: string | null;
+    /**
+     * When the replaced secret stops signing; absent without an overlap.
+     */
+    old_secret_until?: string | null;
+    space_ids?: Array<string> | null;
+    state: 'active' | 'paused' | 'disabled';
+    updated_at: string;
+    url: string;
+};
+
+export type EndpointResponseEnvelope = {
+    data: EndpointResponse;
+    /**
+     * Always true
+     */
+    success: boolean;
+};
+
+export type EndpointResponseListEnvelope = {
+    data: Array<EndpointResponse>;
     /**
      * Always true
      */
@@ -1309,8 +1547,34 @@ export type GrantInfo = {
     owner_first_name: string;
     owner_first_name_genitive?: string | null;
     owner_name: string;
+    /**
+     * Everyone with access to the account, for its avatar group: the owner first, then every person with an active grant, the requester included, in the order they accepted. Never e-mails; invitations aren't people yet.
+     */
+    people?: Array<GrantPerson> | null;
     purpose: 'show' | 'pooled';
     role: 'balance' | 'view' | 'write';
+};
+
+export type GrantPerson = {
+    /**
+     * An uploaded photo's API path (load it through the API) or a sign-in provider's photo; absent: the initials.
+     */
+    avatar_url?: string | null;
+    first_name: string;
+    is_owner: boolean;
+    name: string;
+    /**
+     * Owner for the account's owner, else the grant's role.
+     */
+    role: 'owner' | 'balance' | 'view' | 'write';
+    user_id: string;
+};
+
+export type HealthDay = {
+    day: string;
+    failed: number;
+    p95_latency_ms?: number | null;
+    sent: number;
 };
 
 /**
@@ -2045,7 +2309,45 @@ export type RecurringResponseListEnvelope = {
 
 export type RecurringTransactionsKind = 'standard' | 'loan_payment';
 
+export type ResendRangeRequest = {
+    from: string;
+    to: string;
+};
+
+export type ResendRangeResponse = {
+    queued: number;
+};
+
+export type ResendRangeResponseEnvelope = {
+    data: ResendRangeResponse;
+    /**
+     * Always true
+     */
+    success: boolean;
+};
+
+export type RotateSecretRequest = {
+    overlap_hours?: 0 | 1 | 24 | 72;
+};
+
+export type SecretResponse = {
+    /**
+     * When the replaced secret stops signing; absent without an overlap.
+     */
+    old_secret_until?: string | null;
+    secret: string;
+};
+
+export type SecretResponseEnvelope = {
+    data: SecretResponse;
+    /**
+     * Always true
+     */
+    success: boolean;
+};
+
 export type SharedWith = {
+    avatar_url?: string | null;
     email?: string | null;
     first_name?: string | null;
     grant_id: string;
@@ -2053,6 +2355,10 @@ export type SharedWith = {
     purpose: 'show' | 'pooled';
     role: 'balance' | 'view' | 'write';
     status: 'invited' | 'active';
+    /**
+     * `user_id` and `avatar_url` are the person's once they accepted.
+     */
+    user_id?: string | null;
 };
 
 export type SourceResponse = {
@@ -2116,6 +2422,58 @@ export type SpendingResponseEnvelope = {
     success: boolean;
 };
 
+export type StatsDay = {
+    after_retry: number;
+    average_ms?: number | null;
+    day: string;
+    delivered: number;
+    failed: number;
+    max_ms?: number | null;
+    /**
+     * `min_ms`, `average_ms`, `p95_ms` and `max_ms` are the day's calls' durations; absent on a day without calls.
+     */
+    min_ms?: number | null;
+    p95_ms?: number | null;
+    retrying: number;
+    /**
+     * Sent counts the deliveries made that day (at least one call): Delivered on the first call, `after_retry` later, Failed given up, Retrying still being retried.
+     */
+    sent: number;
+};
+
+export type StatsFigures = {
+    after_retry: number;
+    average_ms?: number | null;
+    delivered: number;
+    failed: number;
+    max_ms?: number | null;
+    /**
+     * `min_ms`, `average_ms`, `p95_ms` and `max_ms` are the day's calls' durations; absent on a day without calls.
+     */
+    min_ms?: number | null;
+    p95_ms?: number | null;
+    retrying: number;
+    /**
+     * Sent counts the deliveries made that day (at least one call): Delivered on the first call, `after_retry` later, Failed given up, Retrying still being retried.
+     */
+    sent: number;
+};
+
+export type StatsResponse = {
+    days?: Array<StatsDay> | null;
+    from: string;
+    to: string;
+    total: StatsFigures;
+};
+
+export type StatsResponseEnvelope = {
+    data: StatsResponse;
+    /**
+     * Always true
+     */
+    success: boolean;
+};
+
 export type Status = 'active' | 'paused';
 
 export type SummaryResponse = {
@@ -2152,6 +2510,16 @@ export type SummaryResponseEnvelope = {
      * Always true
      */
     success: boolean;
+};
+
+export type TestEventRequest = {
+    /**
+     * The event's data to send instead of its sample, where test payloads are on: a JSON object of at most 64 KB with the event's shape (its sample's fields and types). Absent: the event's sample.
+     */
+    payload?: {
+        [key: string]: unknown;
+    };
+    type?: string;
 };
 
 export type TransactionAmountInfo = {
@@ -2771,6 +3139,13 @@ export type UncategorizedSpending = {
     percentage: number;
 };
 
+export type UpdateEndpointRequest = {
+    description?: string | null;
+    events?: Array<string> | null;
+    space_ids?: Array<string> | null;
+    url?: string | null;
+};
+
 export type UpdateSourceRequest = {
     name?: string | null;
     status?: 'active' | 'paused';
@@ -3123,7 +3498,7 @@ export type GetAnalyticsCashFlowData = {
          */
         currency?: string;
         /**
-         * Reserved; has no effect yet.
+         * Accounts shared with the person: mine (their part, the default) or whole (the whole account, as information)
          */
         share?: 'mine' | 'whole';
     };
@@ -3187,7 +3562,7 @@ export type GetAnalyticsCategoriesData = {
          */
         account_ids?: Array<string>;
         /**
-         * Reserved; has no effect yet.
+         * Accounts shared with the person: mine (their part, the default) or whole (the whole account, as information)
          */
         share?: 'mine' | 'whole';
         /**
@@ -3259,7 +3634,7 @@ export type GetAnalyticsMerchantsData = {
          */
         account_ids?: Array<string>;
         /**
-         * Reserved; has no effect yet.
+         * Accounts shared with the person: mine (their part, the default) or whole (the whole account, as information)
          */
         share?: 'mine' | 'whole';
         /**
@@ -3334,6 +3709,10 @@ export type GetAnalyticsNetWorthData = {
          * Currency code; ignored in a business space, which always answers in UAH
          */
         currency?: string;
+        /**
+         * Net worth counts the person's part of an account shared with them; it never takes whole. With account_ids (an account's own chart), whole shows those accounts as they are: the whole balance and every operation, an account shared with the person included
+         */
+        share?: 'mine' | 'whole';
     };
     url: '/v1/analytics/net-worth';
 };
@@ -3391,7 +3770,7 @@ export type GetAnalyticsSpendingData = {
          */
         currency?: string;
         /**
-         * Reserved; has no effect yet.
+         * Accounts shared with the person: mine (their part, the default) or whole (the whole account, as information)
          */
         share?: 'mine' | 'whole';
     };
@@ -3455,7 +3834,7 @@ export type GetAnalyticsSummaryData = {
          */
         account_ids?: Array<string>;
         /**
-         * Reserved; has no effect yet.
+         * Accounts shared with the person: mine (their part, the default) or whole (the whole account, as information)
          */
         share?: 'mine' | 'whole';
     };
@@ -3511,7 +3890,7 @@ export type GetAnalyticsTrendsData = {
          */
         granularity?: string;
         /**
-         * Reserved; has no effect yet.
+         * Accounts shared with the person: mine (their part, the default) or whole (the whole account, as information)
          */
         share?: 'mine' | 'whole';
     };
@@ -4959,9 +5338,61 @@ export type GetTransactionDayTotalsData = {
          */
         currencyCode?: string;
         /**
-         * Reserved; has no effect yet.
+         * Accounts shared with the person: mine (their part, the default) or whole (the whole account, as information)
          */
         share?: 'mine' | 'whole';
+        /**
+         * Business counterparty: only the rows linked to it
+         */
+        counterparty_id?: string;
+        /**
+         * Business project: only the rows of this project and its subprojects
+         */
+        project_id?: string;
+        /**
+         * Recurring rule: only the rows that settle its occurrences
+         */
+        recurring_rule_id?: string;
+        /**
+         * Statement import (its session id): only the rows that committed import created
+         */
+        import_id?: string;
+        /**
+         * Only the rows at this place of the space
+         */
+        place_id?: string;
+        /**
+         * Only the rows in this city
+         */
+        city?: string;
+        /**
+         * Only the rows in this country
+         */
+        country?: string;
+        /**
+         * Only the purchases made online (true) or not online (false)
+         */
+        online?: boolean;
+        /**
+         * Business space: keep rows whose tax treatment waits for review (true) or does not (false); rows without a treatment never match
+         */
+        needs_review?: boolean;
+        /**
+         * Business space: keep rows with this tax class (revenue, own_transfer_in, owner_draw…)
+         */
+        treatment_class?: string;
+        /**
+         * Business space: keep rows with any of these tax classes (together with treatment_class); repeat the parameter or send them comma separated
+         */
+        treatment_classes?: Array<string>;
+        /**
+         * Also list the transfers between the space's portfolio accounts (a wallet and an exchange) as read-only rows of kind portfolio_transfer, ordered, filtered and paged with the transactions; rows no pair can match (category, tag, counterparty, project, tax filters, another type) leave them out
+         */
+        include_portfolio_transfers?: boolean;
+        /**
+         * List a transfer inside the space once, as its outgoing leg (the incoming leg stays when the caller can't see the outgoing one). With accounts selected only a transfer between two of them is folded; one with another account keeps the selected account's own leg (one account: always its own leg)
+         */
+        one_row_per_transfer?: boolean;
     };
     url: '/v1/transactions/day-totals';
 };
@@ -5162,6 +5593,614 @@ export type UpdateTransactionResponses = {
 };
 
 export type UpdateTransactionResponse = UpdateTransactionResponses[keyof UpdateTransactionResponses];
+
+export type ListWebhooksData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/v1/webhooks';
+};
+
+export type ListWebhooksErrors = {
+    /**
+     * Unauthorized
+     */
+    401: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
+};
+
+export type ListWebhooksError = ListWebhooksErrors[keyof ListWebhooksErrors];
+
+export type ListWebhooksResponses = {
+    /**
+     * OK
+     */
+    200: EndpointResponseListEnvelope;
+};
+
+export type ListWebhooksResponse = ListWebhooksResponses[keyof ListWebhooksResponses];
+
+export type CreateWebhookData = {
+    /**
+     * Endpoint
+     */
+    body: CreateEndpointRequest;
+    path?: never;
+    query?: never;
+    url: '/v1/webhooks';
+};
+
+export type CreateWebhookErrors = {
+    /**
+     * Bad Request
+     */
+    400: ErrorResponse;
+    /**
+     * Forbidden
+     */
+    403: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
+    /**
+     * Service Unavailable
+     */
+    503: ErrorResponse;
+};
+
+export type CreateWebhookError = CreateWebhookErrors[keyof CreateWebhookErrors];
+
+export type CreateWebhookResponses = {
+    /**
+     * Created
+     */
+    201: CreatedEndpointResponseEnvelope;
+};
+
+export type CreateWebhookResponse = CreateWebhookResponses[keyof CreateWebhookResponses];
+
+export type ListWebhookEventTypesData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/v1/webhooks/event-types';
+};
+
+export type ListWebhookEventTypesErrors = {
+    /**
+     * Unauthorized
+     */
+    401: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
+};
+
+export type ListWebhookEventTypesError = ListWebhookEventTypesErrors[keyof ListWebhookEventTypesErrors];
+
+export type ListWebhookEventTypesResponses = {
+    /**
+     * OK
+     */
+    200: CatalogEntryListEnvelope;
+};
+
+export type ListWebhookEventTypesResponse = ListWebhookEventTypesResponses[keyof ListWebhookEventTypesResponses];
+
+export type DeleteWebhookData = {
+    body?: never;
+    path: {
+        /**
+         * Endpoint ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/v1/webhooks/{id}';
+};
+
+export type DeleteWebhookErrors = {
+    /**
+     * Not Found
+     */
+    404: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
+};
+
+export type DeleteWebhookError = DeleteWebhookErrors[keyof DeleteWebhookErrors];
+
+export type DeleteWebhookResponses = {
+    /**
+     * OK
+     */
+    200: DeleteDataEnvelope;
+};
+
+export type DeleteWebhookResponse = DeleteWebhookResponses[keyof DeleteWebhookResponses];
+
+export type GetWebhookData = {
+    body?: never;
+    path: {
+        /**
+         * Endpoint ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/v1/webhooks/{id}';
+};
+
+export type GetWebhookErrors = {
+    /**
+     * Not Found
+     */
+    404: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
+};
+
+export type GetWebhookError = GetWebhookErrors[keyof GetWebhookErrors];
+
+export type GetWebhookResponses = {
+    /**
+     * OK
+     */
+    200: EndpointResponseEnvelope;
+};
+
+export type GetWebhookResponse = GetWebhookResponses[keyof GetWebhookResponses];
+
+export type UpdateWebhookData = {
+    /**
+     * Changes
+     */
+    body: UpdateEndpointRequest;
+    path: {
+        /**
+         * Endpoint ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/v1/webhooks/{id}';
+};
+
+export type UpdateWebhookErrors = {
+    /**
+     * Bad Request
+     */
+    400: ErrorResponse;
+    /**
+     * Forbidden
+     */
+    403: ErrorResponse;
+    /**
+     * Not Found
+     */
+    404: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
+};
+
+export type UpdateWebhookError = UpdateWebhookErrors[keyof UpdateWebhookErrors];
+
+export type UpdateWebhookResponses = {
+    /**
+     * OK
+     */
+    200: EndpointResponseEnvelope;
+};
+
+export type UpdateWebhookResponse = UpdateWebhookResponses[keyof UpdateWebhookResponses];
+
+export type ListWebhookDeliveriesData = {
+    body?: never;
+    path: {
+        /**
+         * Endpoint ID
+         */
+        id: string;
+    };
+    query?: {
+        /**
+         * Event type
+         */
+        type?: string;
+        /**
+         * Status
+         */
+        status?: 'pending' | 'succeeded' | 'failed' | 'skipped';
+        /**
+         * Created at or after (RFC 3339)
+         */
+        from?: string;
+        /**
+         * Created before (RFC 3339)
+         */
+        to?: string;
+        /**
+         * meta.next_cursor of the previous page
+         */
+        cursor?: string;
+        /**
+         * Page size (default 50, at most 100)
+         */
+        limit?: number;
+    };
+    url: '/v1/webhooks/{id}/deliveries';
+};
+
+export type ListWebhookDeliveriesErrors = {
+    /**
+     * Bad Request
+     */
+    400: ErrorResponse;
+    /**
+     * Not Found
+     */
+    404: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
+};
+
+export type ListWebhookDeliveriesError = ListWebhookDeliveriesErrors[keyof ListWebhookDeliveriesErrors];
+
+export type ListWebhookDeliveriesResponses = {
+    /**
+     * OK
+     */
+    200: DeliveryPageEnvelope;
+};
+
+export type ListWebhookDeliveriesResponse = ListWebhookDeliveriesResponses[keyof ListWebhookDeliveriesResponses];
+
+export type GetWebhookDeliveryData = {
+    body?: never;
+    path: {
+        /**
+         * Endpoint ID
+         */
+        id: string;
+        /**
+         * Delivery ID
+         */
+        delivery_id: string;
+    };
+    query?: never;
+    url: '/v1/webhooks/{id}/deliveries/{delivery_id}';
+};
+
+export type GetWebhookDeliveryErrors = {
+    /**
+     * Not Found
+     */
+    404: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
+};
+
+export type GetWebhookDeliveryError = GetWebhookDeliveryErrors[keyof GetWebhookDeliveryErrors];
+
+export type GetWebhookDeliveryResponses = {
+    /**
+     * OK
+     */
+    200: DeliveryDetailEnvelope;
+};
+
+export type GetWebhookDeliveryResponse = GetWebhookDeliveryResponses[keyof GetWebhookDeliveryResponses];
+
+export type ResendWebhookDeliveryData = {
+    body?: never;
+    path: {
+        /**
+         * Endpoint ID
+         */
+        id: string;
+        /**
+         * Delivery ID
+         */
+        delivery_id: string;
+    };
+    query?: never;
+    url: '/v1/webhooks/{id}/deliveries/{delivery_id}/resend';
+};
+
+export type ResendWebhookDeliveryErrors = {
+    /**
+     * Not Found
+     */
+    404: ErrorResponse;
+    /**
+     * Conflict
+     */
+    409: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
+};
+
+export type ResendWebhookDeliveryError = ResendWebhookDeliveryErrors[keyof ResendWebhookDeliveryErrors];
+
+export type ResendWebhookDeliveryResponses = {
+    /**
+     * Accepted
+     */
+    202: DeliverySummaryEnvelope;
+};
+
+export type ResendWebhookDeliveryResponse = ResendWebhookDeliveryResponses[keyof ResendWebhookDeliveryResponses];
+
+export type PauseWebhookData = {
+    body?: never;
+    path: {
+        /**
+         * Endpoint ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/v1/webhooks/{id}/pause';
+};
+
+export type PauseWebhookErrors = {
+    /**
+     * Not Found
+     */
+    404: ErrorResponse;
+    /**
+     * Conflict
+     */
+    409: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
+};
+
+export type PauseWebhookError = PauseWebhookErrors[keyof PauseWebhookErrors];
+
+export type PauseWebhookResponses = {
+    /**
+     * OK
+     */
+    200: EndpointResponseEnvelope;
+};
+
+export type PauseWebhookResponse = PauseWebhookResponses[keyof PauseWebhookResponses];
+
+export type ResendWebhookDeliveriesData = {
+    /**
+     * Range
+     */
+    body: ResendRangeRequest;
+    path: {
+        /**
+         * Endpoint ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/v1/webhooks/{id}/resend';
+};
+
+export type ResendWebhookDeliveriesErrors = {
+    /**
+     * Bad Request
+     */
+    400: ErrorResponse;
+    /**
+     * Not Found
+     */
+    404: ErrorResponse;
+    /**
+     * Conflict
+     */
+    409: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
+};
+
+export type ResendWebhookDeliveriesError = ResendWebhookDeliveriesErrors[keyof ResendWebhookDeliveriesErrors];
+
+export type ResendWebhookDeliveriesResponses = {
+    /**
+     * Accepted
+     */
+    202: ResendRangeResponseEnvelope;
+};
+
+export type ResendWebhookDeliveriesResponse = ResendWebhookDeliveriesResponses[keyof ResendWebhookDeliveriesResponses];
+
+export type ResumeWebhookData = {
+    body?: never;
+    path: {
+        /**
+         * Endpoint ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/v1/webhooks/{id}/resume';
+};
+
+export type ResumeWebhookErrors = {
+    /**
+     * Not Found
+     */
+    404: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
+};
+
+export type ResumeWebhookError = ResumeWebhookErrors[keyof ResumeWebhookErrors];
+
+export type ResumeWebhookResponses = {
+    /**
+     * OK
+     */
+    200: EndpointResponseEnvelope;
+};
+
+export type ResumeWebhookResponse = ResumeWebhookResponses[keyof ResumeWebhookResponses];
+
+export type RotateWebhookSecretData = {
+    /**
+     * Overlap
+     */
+    body: RotateSecretRequest;
+    path: {
+        /**
+         * Endpoint ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/v1/webhooks/{id}/rotate-secret';
+};
+
+export type RotateWebhookSecretErrors = {
+    /**
+     * Bad Request
+     */
+    400: ErrorResponse;
+    /**
+     * Not Found
+     */
+    404: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
+};
+
+export type RotateWebhookSecretError = RotateWebhookSecretErrors[keyof RotateWebhookSecretErrors];
+
+export type RotateWebhookSecretResponses = {
+    /**
+     * OK
+     */
+    200: SecretResponseEnvelope;
+};
+
+export type RotateWebhookSecretResponse = RotateWebhookSecretResponses[keyof RotateWebhookSecretResponses];
+
+export type GetWebhookStatsData = {
+    body?: never;
+    path: {
+        /**
+         * Endpoint ID
+         */
+        id: string;
+    };
+    query?: {
+        /**
+         * First day (YYYY-MM-DD; default 6 days before to)
+         */
+        from?: string;
+        /**
+         * Last day (YYYY-MM-DD; default today)
+         */
+        to?: string;
+    };
+    url: '/v1/webhooks/{id}/stats';
+};
+
+export type GetWebhookStatsErrors = {
+    /**
+     * Bad Request
+     */
+    400: ErrorResponse;
+    /**
+     * Not Found
+     */
+    404: ErrorResponse;
+    /**
+     * Too Many Requests: this token's or this route's rate limit is used up (BIZ_080). Retry after Retry-After seconds.
+     */
+    429: ErrorResponse;
+};
+
+export type GetWebhookStatsError = GetWebhookStatsErrors[keyof GetWebhookStatsErrors];
+
+export type GetWebhookStatsResponses = {
+    /**
+     * OK
+     */
+    200: StatsResponseEnvelope;
+};
+
+export type GetWebhookStatsResponse = GetWebhookStatsResponses[keyof GetWebhookStatsResponses];
+
+export type SendWebhookTestData = {
+    /**
+     * Event type
+     */
+    body: TestEventRequest;
+    path: {
+        /**
+         * Endpoint ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/v1/webhooks/{id}/test';
+};
+
+export type SendWebhookTestErrors = {
+    /**
+     * Bad Request
+     */
+    400: ErrorResponse;
+    /**
+     * Not Found
+     */
+    404: ErrorResponse;
+    /**
+     * Conflict
+     */
+    409: ErrorResponse;
+    /**
+     * Request Entity Too Large
+     */
+    413: ErrorResponse;
+    /**
+     * Too Many Requests
+     */
+    429: ErrorResponse;
+};
+
+export type SendWebhookTestError = SendWebhookTestErrors[keyof SendWebhookTestErrors];
+
+export type SendWebhookTestResponses = {
+    /**
+     * Accepted
+     */
+    202: DeliverySummaryEnvelope;
+};
+
+export type SendWebhookTestResponse = SendWebhookTestResponses[keyof SendWebhookTestResponses];
 
 export type WebhookAccountBalanceUpdatedWebhookPayload = AccountBalanceUpdatedEvent;
 

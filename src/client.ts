@@ -311,7 +311,9 @@ export class Degroshi {
         api.getAnalyticsSpending({ client: this.client, query }),
       ),
     trends: (query: QueryOf<T.GetAnalyticsTrendsData>) =>
-      this.one<DataOf<T.TrendsResponseEnvelope>>(api.getAnalyticsTrends({ client: this.client, query })),
+      this.one<DataOf<T.TrendsResponseEnvelope>>(
+        api.getAnalyticsTrends({ client: this.client, query }),
+      ),
     merchants: (query: QueryOf<T.GetAnalyticsMerchantsData>) =>
       this.one<DataOf<T.MerchantAnalyticsResponseEnvelope>>(
         api.getAnalyticsMerchants({ client: this.client, query }),
@@ -324,9 +326,14 @@ export class Degroshi {
 
   /** Custom sources: push accounts, transactions and balances from your own system. */
   readonly sources = {
-    list: () => this.one<DataOf<T.SourceResponseListEnvelope>>(api.listSources({ client: this.client })),
+    list: () =>
+      this.one<DataOf<T.SourceResponseListEnvelope>>(
+        api.listSources({ client: this.client }),
+      ),
     get: (id: string) =>
-      this.one<DataOf<T.SourceResponseEnvelope>>(api.getSource({ client: this.client, path: { id } })),
+      this.one<DataOf<T.SourceResponseEnvelope>>(
+        api.getSource({ client: this.client, path: { id } }),
+      ),
     create: (body: BodyOf<T.CreateSourceData>, options?: WriteOptions) =>
       this.one<DataOf<T.SourceResponseEnvelope>>(
         api.createSource({
@@ -429,8 +436,93 @@ export class Degroshi {
       ),
   };
 
-  /** Webhook signatures: `await degroshi.webhooks.verify(rawBody, request.headers.get("Degroshi-Signature"), secret)`. */
+  /**
+   * Webhook endpoints of the space (a token with `webhooks:manage`, for event types its scopes read), and signatures:
+   * `await degroshi.webhooks.verify(rawBody, request.headers.get("Degroshi-Signature"), secret)`.
+   */
   readonly webhooks = {
+    /** The event types an endpoint can take, with a made-up sample of each. */
+    eventTypes: () =>
+      this.one<DataOf<T.CatalogEntryListEnvelope>>(
+        api.listWebhookEventTypes({ client: this.client }),
+      ),
+    list: () =>
+      this.one<DataOf<T.EndpointResponseListEnvelope>>(
+        api.listWebhooks({ client: this.client }),
+      ),
+    get: (id: string) =>
+      this.one<DataOf<T.EndpointResponseEnvelope>>(
+        api.getWebhook({ client: this.client, path: { id } }),
+      ),
+    /**
+     * A new endpoint in the space; the answer carries its signing secret, which a token can't read back. Not retried:
+     * a second try could make a second endpoint.
+     */
+    create: (body: BodyOf<T.CreateWebhookData>) =>
+      this.one<DataOf<T.CreatedEndpointResponseEnvelope>>(
+        api.createWebhook({ client: this.client, body }),
+      ),
+    update: (id: string, body: BodyOf<T.UpdateWebhookData>) =>
+      this.one<DataOf<T.EndpointResponseEnvelope>>(
+        api.updateWebhook({ client: this.client, path: { id }, body }),
+      ),
+    delete: (id: string) =>
+      this.envelope(
+        api.deleteWebhook({ client: this.client, path: { id } }),
+      ).then(() => undefined),
+    pause: (id: string) =>
+      this.one<DataOf<T.EndpointResponseEnvelope>>(
+        api.pauseWebhook({ client: this.client, path: { id } }),
+      ),
+    resume: (id: string) =>
+      this.one<DataOf<T.EndpointResponseEnvelope>>(
+        api.resumeWebhook({ client: this.client, path: { id } }),
+      ),
+    /** A new secret; the old one keeps signing for `overlap_hours` (0, 1, 24 or 72). */
+    rotateSecret: (id: string, body: BodyOf<T.RotateWebhookSecretData>) =>
+      this.one<DataOf<T.SecretResponseEnvelope>>(
+        api.rotateWebhookSecret({ client: this.client, path: { id }, body }),
+      ),
+    /** A made-up event (`webhook.test` without a type), marked `test: true`. */
+    sendTest: (id: string, body: BodyOf<T.SendWebhookTestData> = {}) =>
+      this.one<DataOf<T.DeliverySummaryEnvelope>>(
+        api.sendWebhookTest({ client: this.client, path: { id }, body }),
+      ),
+    stats: (id: string, query?: QueryOf<T.GetWebhookStatsData>) =>
+      this.one<DataOf<T.StatsResponseEnvelope>>(
+        api.getWebhookStats({ client: this.client, path: { id }, query }),
+      ),
+    /** One page of the endpoint's log, newest first: `data` and `meta.next_cursor`. */
+    deliveries: (id: string, query?: QueryOf<T.ListWebhookDeliveriesData>) =>
+      this.deliveryPage(id, query),
+    /** Every delivery of the log, following `meta.next_cursor`. */
+    iterateDeliveries: (
+      id: string,
+      query: QueryOf<T.ListWebhookDeliveriesData> = {},
+    ) => this.iterateDeliveryRows(id, query),
+    delivery: (id: string, deliveryId: string) =>
+      this.one<DataOf<T.DeliveryDetailEnvelope>>(
+        api.getWebhookDelivery({
+          client: this.client,
+          path: { id, delivery_id: deliveryId },
+        }),
+      ),
+    resendDelivery: (id: string, deliveryId: string) =>
+      this.one<DataOf<T.DeliverySummaryEnvelope>>(
+        api.resendWebhookDelivery({
+          client: this.client,
+          path: { id, delivery_id: deliveryId },
+        }),
+      ),
+    /** The failed and skipped deliveries between `from` and `to`, again (at most 30 days). */
+    resend: (id: string, body: BodyOf<T.ResendWebhookDeliveriesData>) =>
+      this.one<DataOf<T.ResendRangeResponseEnvelope>>(
+        api.resendWebhookDeliveries({
+          client: this.client,
+          path: { id },
+          body,
+        }),
+      ),
     verify: (
       rawBody: string | Uint8Array | ArrayBuffer,
       header: string | null | undefined,
@@ -479,6 +571,32 @@ export class Degroshi {
       const last = result.data.at(-1);
       if (!result.meta.has_more || !last) return;
       cursor = last.id;
+    }
+  }
+
+  private async deliveryPage(
+    id: string,
+    query?: QueryOf<T.ListWebhookDeliveriesData>,
+  ): Promise<{ data: T.DeliverySummary[]; meta: T.DeliveryCursorMeta }> {
+    const envelope = await this.envelope(
+      api.listWebhookDeliveries({ client: this.client, path: { id }, query }),
+    );
+    return {
+      data: (envelope.data ?? []) as T.DeliverySummary[],
+      meta: (envelope.meta ?? { has_more: false }) as T.DeliveryCursorMeta,
+    };
+  }
+
+  private async *iterateDeliveryRows(
+    id: string,
+    query: QueryOf<T.ListWebhookDeliveriesData>,
+  ): AsyncGenerator<T.DeliverySummary> {
+    let cursor = query.cursor;
+    for (;;) {
+      const page = await this.deliveryPage(id, { ...query, cursor });
+      yield* page.data;
+      if (!page.meta.has_more || !page.meta.next_cursor) return;
+      cursor = page.meta.next_cursor;
     }
   }
 

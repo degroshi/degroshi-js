@@ -291,6 +291,49 @@ describe("Degroshi", () => {
     expect(seen.map((request) => request.method)).toEqual(["DELETE", "DELETE"]);
   });
 
+  it("creates a webhook without an Idempotency-Key and pages its deliveries by next_cursor", async () => {
+    // Arrange
+    const { degroshi, seen } = client((request) => {
+      const url = new URL(request.url);
+      if (request.method === "POST") {
+        return json(
+          {
+            success: true,
+            data: { endpoint: { id: "w1" }, secret: "dg_whsec_x" },
+          },
+          201,
+        );
+      }
+      return url.searchParams.get("cursor")
+        ? json({
+            success: true,
+            data: [{ id: "d1" }],
+            meta: { has_more: false },
+          })
+        : json({
+            success: true,
+            data: [{ id: "d2" }],
+            meta: { has_more: true, next_cursor: "c2" },
+          });
+    });
+
+    // Act
+    const created = await degroshi.webhooks.create({
+      url: "https://hooks.example.com/degroshi",
+      events: ["account.balance.updated"],
+    });
+    const actual: string[] = [];
+    for await (const delivery of degroshi.webhooks.iterateDeliveries("w1"))
+      actual.push(delivery.id);
+
+    // Assert
+    expect(created.secret).toBe("dg_whsec_x");
+    expect(seen[0]!.headers.get("Idempotency-Key")).toBeNull();
+    expect(new URL(seen[0]!.url).pathname).toBe("/v1/webhooks");
+    expect(actual).toEqual(["d2", "d1"]);
+    expect(new URL(seen[2]!.url).searchParams.get("cursor")).toBe("c2");
+  });
+
   it("needs a key", () => {
     expect(() => new Degroshi({ apiKey: "" })).toThrow(/apiKey/);
   });
