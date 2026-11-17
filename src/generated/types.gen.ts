@@ -4,7 +4,7 @@ export type ClientOptions = {
     baseUrl: 'https://api.degroshi.com' | (string & {});
 };
 
-export type Webhooks = WebhookAccountBalanceUpdatedWebhookRequest | WebhookBudgetThresholdReachedWebhookRequest | WebhookConnectionStatusChangedWebhookRequest | WebhookImportCompletedWebhookRequest | WebhookRecurringDueWebhookRequest | WebhookTransactionCreatedWebhookRequest | WebhookTransactionDeletedWebhookRequest | WebhookTransactionUpdatedWebhookRequest | WebhookTransactionsBulkUpdatedWebhookRequest;
+export type Webhooks = WebhookAccountBalanceUpdatedWebhookRequest | WebhookBudgetThresholdReachedWebhookRequest | WebhookConnectionStatusChangedWebhookRequest | WebhookImportCompletedWebhookRequest | WebhookRecurringDueWebhookRequest | WebhookSandboxResetWebhookRequest | WebhookTransactionCreatedWebhookRequest | WebhookTransactionDeletedWebhookRequest | WebhookTransactionUpdatedWebhookRequest | WebhookTransactionsBulkUpdatedWebhookRequest;
 
 /**
  * The `account.balance.updated` event, as an endpoint receives it.
@@ -1191,6 +1191,10 @@ export type CreateTransactionRequest = {
     exchange_rate?: string;
     external_source?: string;
     /**
+     * how amount was found from the original: reference (our rate), card (fx-quote's basis) or bank (the account's charge; it teaches the account its rate)
+     */
+    fx_basis?: 'reference' | 'card' | 'bank';
+    /**
      * An optional id you make up (any UUID), so a retried request doesn't create the row twice: the same id answers 200 with the stored row and the header Idempotent-Replayed: true.
      */
     id?: string;
@@ -2355,6 +2359,41 @@ export type RotateSecretRequest = {
     overlap_hours?: 0 | 1 | 24 | 72;
 };
 
+/**
+ * The `sandbox.reset` event, as an endpoint receives it.
+ */
+export type SandboxResetEvent = {
+    /**
+     * The endpoint's version of the event shapes.
+     */
+    api_version: string;
+    created: string;
+    data: {
+        object: {
+            object?: string;
+            origin?: string;
+            seed_version?: number;
+            seeded_at?: string;
+            space_id?: string;
+        };
+    };
+    id: string;
+    object: 'event';
+    /**
+     * Who made the change: app, api, bank_sync, import, recurring, categorize, rule, budget or test. Every write of a request authenticated by an API key is api.
+     */
+    source: string;
+    /**
+     * Null for a test event.
+     */
+    space_id: string | null;
+    /**
+     * True for a test event sent from the endpoint's page.
+     */
+    test: boolean;
+    type: 'sandbox.reset';
+};
+
 export type SandboxResponse = {
     name: string;
     /**
@@ -2830,6 +2869,10 @@ export type TransactionResponse = {
      */
     fee_transaction_id?: string | null;
     financials: TransactionFinancialsResponse;
+    /**
+     * How amount was found from the original: reference (our rate), card (with the account's own rate, learned from the bank's figures) or bank (the bank's figure); absent without an original or before it was recorded.
+     */
+    fx_basis?: 'reference' | 'card' | 'bank' | null;
     id: string;
     isDeleted: boolean;
     is_split: boolean;
@@ -3338,7 +3381,7 @@ export type WebhookEvent = {
      * True for a test event sent from the endpoint's page.
      */
     test: boolean;
-    type: 'transaction.created' | 'transaction.updated' | 'transaction.deleted' | 'transactions.bulk_updated' | 'account.balance.updated' | 'connection.status_changed' | 'import.completed' | 'budget.threshold_reached' | 'recurring.due';
+    type: 'transaction.created' | 'transaction.updated' | 'transaction.deleted' | 'transactions.bulk_updated' | 'account.balance.updated' | 'connection.status_changed' | 'import.completed' | 'budget.threshold_reached' | 'recurring.due' | 'sandbox.reset';
 };
 
 export type ListAccountsData = {
@@ -6330,6 +6373,15 @@ export type WebhookRecurringDueWebhookPayload = RecurringDueEvent;
 export type WebhookRecurringDueWebhookRequest = {
     body: WebhookRecurringDueWebhookPayload;
     key: 'recurring.due';
+    path?: never;
+    query?: never;
+};
+
+export type WebhookSandboxResetWebhookPayload = SandboxResetEvent;
+
+export type WebhookSandboxResetWebhookRequest = {
+    body: WebhookSandboxResetWebhookPayload;
+    key: 'sandbox.reset';
     path?: never;
     query?: never;
 };

@@ -4,6 +4,7 @@ import type {
   ConnectionStatusChangedEvent,
   ImportCompletedEvent,
   RecurringDueEvent,
+  SandboxResetEvent,
   TransactionCreatedEvent,
   TransactionDeletedEvent,
   TransactionUpdatedEvent,
@@ -21,6 +22,7 @@ export type WebhookEvent =
   | ImportCompletedEvent
   | BudgetThresholdReachedEvent
   | RecurringDueEvent
+  | SandboxResetEvent
 
 /** The header that carries the signatures: `t=<unix seconds>,v1=<hex HMAC-SHA256>[,v1=...]`. */
 export const SIGNATURE_HEADER = "Degroshi-Signature"
