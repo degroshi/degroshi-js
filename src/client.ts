@@ -212,12 +212,18 @@ export class Degroshi {
   };
 
   readonly transactions = {
-    /** One page; `meta.has_next` says whether another follows. */
+    /**
+     * One page; `meta.has_next` says whether another follows, and `meta.next_cursor` (absent on the last page) is
+     * what to send as `after` for it.
+     */
     list: (query?: QueryOf<T.ListTransactionsData>) =>
       this.page<T.TransactionResponse>(
         api.listTransactions({ client: this.client, query }),
       ),
-    /** Every matching transaction, page after page. */
+    /**
+     * Every matching transaction, page after page by `next_cursor`, so rows added or removed meanwhile don't repeat
+     * or skip a row the way page numbers do. Under an amount sort a rate change can still move a row: dedupe by id.
+     */
     iterate: (query: QueryOf<T.ListTransactionsData> = {}) =>
       this.iterateTransactions(query),
     get: (id: string) =>
@@ -548,14 +554,18 @@ export class Degroshi {
   private async *iterateTransactions(
     query: QueryOf<T.ListTransactionsData>,
   ): AsyncGenerator<T.TransactionResponse> {
+    let after = query.after;
+    // The page number is the way in (and the way on from an API without next_cursor); the cursor takes it from there.
     for (let page = query.page ?? 1; ; page++) {
       const result = await this.transactions.list({
         ...query,
         page,
         per_page: query.per_page ?? 100,
+        ...(after ? { after } : {}),
       });
       yield* result.data;
       if (!result.meta?.has_next || result.data.length === 0) return;
+      after = result.meta.next_cursor ?? undefined;
     }
   }
 

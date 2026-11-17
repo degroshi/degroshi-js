@@ -175,6 +175,40 @@ describe("Degroshi", () => {
     expect(seen).toHaveLength(2);
   });
 
+  it("iterates transactions by next_cursor once the API gives one", async () => {
+    // Arrange: three rows a page apart; each page names the next by its cursor.
+    const { degroshi, seen } = client((request) => {
+      const after = new URL(request.url).searchParams.get("after");
+      const at = after ? Number(after.slice(1)) : 1;
+      return json({
+        success: true,
+        data: [{ id: `t${at}` }],
+        meta: {
+          page: 1,
+          per_page: 1,
+          total: 3,
+          total_pages: 3,
+          has_next: at < 3,
+          has_prev: at > 1,
+          ...(at < 3 ? { next_cursor: `c${at + 1}` } : {}),
+        },
+      });
+    });
+
+    // Act
+    const actual: string[] = [];
+    for await (const transaction of degroshi.transactions.iterate({
+      per_page: 1,
+    }))
+      actual.push(transaction.id);
+
+    // Assert
+    expect(actual).toEqual(["t1", "t2", "t3"]);
+    expect(
+      seen.map((request) => new URL(request.url).searchParams.get("after")),
+    ).toEqual([null, "c2", "c3"]);
+  });
+
   it("iterates events with starting_after while has_more is true", async () => {
     // Arrange
     const { degroshi } = client((request) => {

@@ -1802,6 +1802,10 @@ export type MerchantFigures = {
 export type Meta = {
     has_next: boolean;
     has_prev: boolean;
+    /**
+     * The place after the page's last row on a list that pages by cursor (GET /v1/transactions): send it back as after for the next page. Absent on the last page and on lists that page by number only.
+     */
+    next_cursor?: string | null;
     page: number;
     per_page: number;
     total: number;
@@ -5141,6 +5145,10 @@ export type ListTransactionsData = {
          * Items per page (max 200)
          */
         per_page?: number;
+        /**
+         * Cursor: start right after the row a previous page's meta.next_cursor names (page is then ignored). Send the same filters and sort it was issued for; another sort is a 400. The amount sorts compare at the latest rates, so a rate change between pages can move a row across the cursor: dedupe by id, and use a date sort for an exact walk
+         */
+        after?: string;
         /**
          * Filter by account ID
          */
