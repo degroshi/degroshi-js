@@ -1834,6 +1834,22 @@ export type MySpaceResponseListEnvelope = {
     success: boolean;
 };
 
+export type NetWorthChange = {
+    /**
+     * Decimal number encoded as a string (for example "1234.5600"); never a JSON number.
+     */
+    amount: string;
+    /**
+     * Percent of the previous capital's size, two places; absent when the previous capital was zero.
+     */
+    percent?: string | null;
+    /**
+     * Decimal number encoded as a string (for example "1234.5600"); never a JSON number.
+     */
+    previous_net_worth: string;
+    since: string;
+};
+
 export type NetWorthPoint = {
     /**
      * Decimal number encoded as a string (for example "1234.5600"); never a JSON number.
@@ -1854,6 +1870,10 @@ export type NetWorthResponse = {
     base_currency: string;
     by_account?: Array<AccountWithConvertedBalance> | null;
     calculated_at: string;
+    /**
+     * Net_worth against 24 hours ago; absent when it can't be told (a rate of then or now is missing, or the history couldn't be read).
+     */
+    change_24h?: NetWorthChange | null;
     currency_info: AccountsCurrencyInfo;
     /**
      * `missing_rates` lists account currencies without an exchange rate into base_currency; those accounts are excluded from the totals.
