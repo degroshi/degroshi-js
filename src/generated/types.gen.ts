@@ -1157,7 +1157,7 @@ export type CreatePlaceRequest = {
     pin?: PointName;
     provider_ref?: string | null;
     /**
-     * Ref stores a result of ours: "gers:…" or "city:…".
+     * Ref stores a result of ours: "gers:…" or "city:…", names one of the space's places ("space:…"), or is "online": the space's one place for purchases online, found or made the first time (kind online, no name).
      */
     ref?: string | null;
 };
@@ -1738,13 +1738,17 @@ export type MerchantAnalyticsResponse = {
     currencyInfo: AnalyticsCurrencyInfo;
     from: string;
     /**
-     * The merchants with operations in the period, the largest amount first, at most `limit`.
+     * The merchants with operations in the period, the largest amount first, at most `limit`. With group_by=category, one row per merchant and category (the operation's own), at most `limit_per_category` per category, the categories largest first.
      */
     merchants: Array<MerchantActivity>;
     /**
      * `missing_rates` lists currencies without an exchange rate; their amounts are left out. Omitted when everything converted.
      */
     missing_rates?: Array<string> | null;
+    /**
+     * Others, with group_by=category, are per category what its listed rows leave (a category whose rows hold everything has none); empty without.
+     */
+    others: Array<MerchantOthers>;
     /**
      * `pending_valuation` counts the business-space operations of the period that have no UAH value yet (left out). Omitted when 0.
      */
@@ -1797,6 +1801,21 @@ export type MerchantFigures = {
      */
     previous_amount: string;
     previous_count: number;
+};
+
+export type MerchantOthers = {
+    /**
+     * The category's figure (as /v1/analytics/categories has it) minus its listed merchants: it can be negative when refunds of merchants without a purchase in the period outweigh the rest.
+     */
+    amount: string;
+    /**
+     * The category, null for the operations without one.
+     */
+    category_id?: string | null;
+    /**
+     * The category's operations of the side that its listed merchants leave.
+     */
+    count: number;
 };
 
 export type Meta = {
@@ -3743,9 +3762,21 @@ export type GetAnalyticsMerchantsData = {
          */
         category_id?: string;
         /**
-         * Max merchants (default 20, max 100)
+         * Max merchants (default 20, max 100); ignored with group_by
          */
         limit?: number;
+        /**
+         * category: one row per merchant and category, the rest of each category in others
+         */
+        group_by?: 'category';
+        /**
+         * With group_by=category, the merchants listed per category (default 3, 1 to 20)
+         */
+        limit_per_category?: number;
+        /**
+         * Leave out the operations a recurring rule created or matched, a split part with its parent's (default false)
+         */
+        exclude_recurring?: boolean;
         /**
          * Accounts to cover (any of them): repeat the parameter or send comma separated UUIDs
          */

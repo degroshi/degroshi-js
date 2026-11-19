@@ -1,6 +1,6 @@
 {
   "name": "degroshi",
-  "version": "1.0.0-beta.8",
+  "version": "1.0.0-beta.9",
   "description": "The official TypeScript and JavaScript SDK for the Degroshi API",
   "license": "Apache-2.0",
   "author": "Degroshi",
