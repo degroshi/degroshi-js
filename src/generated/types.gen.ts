@@ -5201,6 +5201,10 @@ export type ListTransactionsData = {
          */
         after?: string;
         /**
+         * With after: false reads the page without counting the matches, which is faster in a big space; meta.total and meta.total_pages are then 0, and has_next and next_cursor still say whether more rows follow. Ignored without after
+         */
+        count?: boolean;
+        /**
          * Filter by account ID
          */
         account_id?: string;
