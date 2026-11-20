@@ -105,6 +105,10 @@ export type AccountListResponse = {
      */
     annual_rate?: string | null;
     /**
+     * When the account was archived: set when it closes, cleared when it reopens; absent while it is open. A closed account's "Closed" stamp shows this day (an instalment plan's own closed_at wins).
+     */
+    archived_at?: string | null;
+    /**
      * Decimal number encoded as a string (for example "1234.5600"); never a JSON number.
      */
     available_balance?: string | null;
@@ -242,6 +246,10 @@ export type AccountResponse = {
      * The interest rate in percent a year (14.5 = 14.5% a year), at most 2 decimals, 0–100: a deposit's or savings account's, a credit card's after its grace period, a credit line's, loan's or mortgage's.
      */
     annual_rate?: string | null;
+    /**
+     * When the account was archived: set when it closes, cleared when it reopens; absent while it is open. A closed account's "Closed" stamp shows this day (an instalment plan's own closed_at wins).
+     */
+    archived_at?: string | null;
     /**
      * Decimal number encoded as a string (for example "1234.5600"); never a JSON number.
      */
@@ -387,6 +395,10 @@ export type AccountWithConvertedBalance = {
      * The interest rate in percent a year (14.5 = 14.5% a year), at most 2 decimals, 0–100: a deposit's or savings account's, a credit card's after its grace period, a credit line's, loan's or mortgage's.
      */
     annual_rate?: string | null;
+    /**
+     * When the account was archived: set when it closes, cleared when it reopens; absent while it is open. A closed account's "Closed" stamp shows this day (an instalment plan's own closed_at wins).
+     */
+    archived_at?: string | null;
     /**
      * Decimal number encoded as a string (for example "1234.5600"); never a JSON number.
      */
