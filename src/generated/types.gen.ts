@@ -2180,6 +2180,10 @@ export type PushItem = {
      * Booked (default) or pending; a pending row is replaced when the same external id comes booked.
      */
     status?: 'booked' | 'pending';
+    /**
+     * Transfer marks the row as one leg of a transfer between two of the person's accounts.
+     */
+    transfer?: PushTransfer;
 };
 
 export type PushItemError = {
@@ -2212,6 +2216,10 @@ export type PushItemResultEnvelope = {
 export type PushOriginal = {
     amount?: string;
     currency?: string;
+};
+
+export type PushTransfer = {
+    account?: string;
 };
 
 export type PushedPage = {
@@ -3000,6 +3008,14 @@ export type TransactionResponse = {
     service_period_from?: string | null;
     service_period_to?: string | null;
     space_id: string;
+    /**
+     * The user id of the participant whose own spending this row of a pooled shared account is: the share takes it whole from their part. Omitted while the share splits it.
+     */
+    spent_by?: string | null;
+    /**
+     * That participant's first name (as created_by_name); omitted with spent_by.
+     */
+    spent_by_name?: string | null;
     splits?: Array<TransactionResponse> | null;
     status: TransactionStatus;
     /**
@@ -3375,6 +3391,10 @@ export type UpdateTransactionRequest = {
      */
     place_id?: string | null;
     place_source?: 'device' | 'picked' | 'receipt' | 'merchant' | 'ai' | null | null;
+    /**
+     * `spent_by` marks a spending row of an account shared in pooled mode as one participant's own: the share then takes it whole from their part instead of splitting it. A user id of someone in the account's share (its owner or an active pooled grantee); null clears it (back to the split). 422 TXN_SPENT_BY_NOT_ALLOWED with details.reason not_pooled | not_participant | not_spending.
+     */
+    spent_by?: string | null;
     status?: 'completed' | 'pending' | 'cancelled';
     /**
      * Replaces the transaction's tags (tags of the space, at most 20); [] removes them all, absent keeps them. On a transfer it applies to the edited leg.
@@ -5318,6 +5338,10 @@ export type ListTransactionsData = {
          */
         import_id?: string;
         /**
+         * A participant's user id: only rows of pooled shared accounts marked as their own spending
+         */
+        spent_by?: string;
+        /**
          * Only the rows at this place of the space
          */
         place_id?: string;
@@ -5575,6 +5599,10 @@ export type GetTransactionDayTotalsData = {
          * Statement import (its session id): only the rows that committed import created
          */
         import_id?: string;
+        /**
+         * A participant's user id: only rows of pooled shared accounts marked as their own spending
+         */
+        spent_by?: string;
         /**
          * Only the rows at this place of the space
          */
