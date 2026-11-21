@@ -1576,6 +1576,10 @@ export type Frequency = 'daily' | 'weekly' | 'biweekly' | 'monthly' | 'yearly';
 export type GradientType = 'linear' | 'radial' | 'conic';
 
 export type GrantInfo = {
+    /**
+     * Which operations a write grant lets the person change: own, the ones they added; all, any. The owner can change it. Sent for every role; it only matters for write.
+     */
+    edit_scope?: 'own' | 'all' | null;
     grant_id: string;
     owner_first_name: string;
     owner_first_name_genitive?: string | null;
@@ -2931,6 +2935,10 @@ export type TransactionResponse = {
      * The sign of the always-positive amount on this account: income/transfer_in add to the balance, expense/transfer_out subtract.
      */
     direction: TransactionsTransactionDirection;
+    /**
+     * False for an operation on an account shared with the caller that their grant doesn't let them change: a balance or view grant, the account_sharing_write flag off for them, or, under edit_scope own, a row someone else added; and a read_only row. True for every other row; the space role and the row's own locks (a bank row, a split part) still apply.
+     */
+    editable?: boolean | null;
     /**
      * Decimal number encoded as a string (for example "1234.5600"); never a JSON number.
      */
