@@ -2009,6 +2009,10 @@ export type OccurrenceResponse = {
      * True when the date is today or earlier in the user's zone: the hourly processor posts the occurrence on its next run.
      */
     is_due: boolean;
+    /**
+     * Standard, loan_payment or transfer. A transfer's occurrence has type transfer and direction transfer_out, and stays out of the income and expense totals: it moves the person's own money.
+     */
+    kind?: 'standard' | 'loan_payment' | 'transfer' | null;
     merchant?: string | null;
     /**
      * The enriched merchant identity of the rule, when known.
@@ -2028,6 +2032,11 @@ export type OccurrenceResponse = {
      * Planned (still ahead, or waiting within its window), awaiting_confirmation (a confirm rule's payment day came and nobody confirmed or skipped it yet: never paid, never spent), paid, skipped, missing (a track_only payment whose window closed with no row) or paused (the rule was paused on that day). Past items come only with with_past.
      */
     status: OccurrenceStatus;
+    /**
+     * `to_account_id` and `to_account_name` are the loan a loan_payment pays, or the account a transfer goes to.
+     */
+    to_account_id?: string | null;
+    to_account_name?: string | null;
     /**
      * The row that settled the occurrence (paid), when known.
      */
@@ -2333,7 +2342,7 @@ export type RecurringResponse = {
     /**
      * standard, or loan_payment for a loan's repayment.
      */
-    kind?: RecurringTransactionsKind | null;
+    kind?: 'standard' | 'loan_payment' | 'transfer' | null;
     last_paid?: LastPaidResponse | null;
     merchant?: string | null;
     merchant_brand?: BrandResponse | null;
@@ -2364,9 +2373,13 @@ export type RecurringResponse = {
     space_id: string;
     start_date: string;
     /**
-     * The loan a loan_payment pays.
+     * The loan a loan_payment pays, or the account a transfer goes to.
      */
     to_account_id?: string | null;
+    /**
+     * What arrives on a transfer's account in another currency; omitted in one currency.
+     */
+    to_amount?: string | null;
     type: TransactionsTransactionType;
     updated_at: string;
     /**
@@ -2391,7 +2404,7 @@ export type RecurringResponseListEnvelope = {
     success: boolean;
 };
 
-export type RecurringTransactionsKind = 'standard' | 'loan_payment';
+export type RecurringTransactionsKind = 'standard' | 'loan_payment' | 'transfer';
 
 export type ResendRangeRequest = {
     from: string;
@@ -3301,7 +3314,7 @@ export type UpdateSourceRequest = {
 
 export type UpdateTransactionRequest = {
     /**
-     * `account_id` moves a plain income or expense to another open, manual account of the space in the same currency; its balance effect moves with it (422 TXN_ACCOUNT_CURRENCY_MISMATCH for another currency, TXN_ACCOUNT_CHANGE_NOT_ALLOWED for transfer legs, transfer fees and splits, TXN_ACCOUNT_NOT_MANUAL for bank-synced accounts).
+     * `account_id` moves a plain income or expense to another open, manual account of the space, in any currency; its balance effect moves with it. In another currency the row keeps what it was paid and is charged in the new account's currency (amount when sent, else converted at the rate of the row's day; see planCurrencyMove). TXN_ACCOUNT_CHANGE_NOT_ALLOWED for transfer legs, transfer fees and splits, TXN_ACCOUNT_NOT_MANUAL for bank-synced accounts.
      */
     account_id?: string | null;
     /**
