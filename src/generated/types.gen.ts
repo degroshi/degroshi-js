@@ -183,6 +183,10 @@ export type AccountListResponse = {
      * Deprecated: always false.
      */
     is_shared: boolean;
+    /**
+     * The account is the archived copy of the caller's part of a shared account whose access ended. It stays archived: it is never reopened (422), only deleted for good.
+     */
+    keeps_share_history?: boolean | null;
     metadata?: {
         [key: string]: unknown;
     } | null;
@@ -321,6 +325,10 @@ export type AccountResponse = {
      * Deprecated: always false.
      */
     is_shared: boolean;
+    /**
+     * The account is the archived copy of the caller's part of a shared account whose access ended. It stays archived: it is never reopened (422), only deleted for good.
+     */
+    keeps_share_history?: boolean | null;
     metadata?: {
         [key: string]: unknown;
     } | null;
@@ -483,6 +491,10 @@ export type AccountWithConvertedBalance = {
      * Deprecated: always false.
      */
     is_shared: boolean;
+    /**
+     * The account is the archived copy of the caller's part of a shared account whose access ended. It stays archived: it is never reopened (422), only deleted for good.
+     */
+    keeps_share_history?: boolean | null;
     metadata?: {
         [key: string]: unknown;
     } | null;
@@ -2957,6 +2969,10 @@ export type TransactionResponse = {
      * How amount was found from the original: reference (our rate), card (with the account's own rate, learned from the bank's figures) or bank (the bank's figure); absent without an original or before it was recorded.
      */
     fx_basis?: 'reference' | 'card' | 'bank' | null;
+    /**
+     * `fx_correction_bps` is, for a row booked at the card's rate (fx_basis card), the account's correction it was booked with, in basis points from our rate (460 = +4.6%): the transaction's card-rate hint. Absent otherwise, and once a typed charge or our rate replaced it.
+     */
+    fx_correction_bps?: number | null;
     id: string;
     isDeleted: boolean;
     is_split: boolean;
