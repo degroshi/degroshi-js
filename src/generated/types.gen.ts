@@ -5719,7 +5719,12 @@ export type DeleteTransactionData = {
          */
         id: string;
     };
-    query?: never;
+    query?: {
+        /**
+         * The transaction this one duplicates (a merged duplicate)
+         */
+        as_duplicate_of?: string;
+    };
     url: '/v1/transactions/{id}';
 };
 
